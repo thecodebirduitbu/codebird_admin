@@ -3,3 +3,16 @@
 
   font-weight: 600;
 }
+.eventSmallText{
+  font-weight: 200;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+.eventBtn{
+ background-color: #675cff;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    /* font-family: 'Montserrat', sans-serif; */
+    color: #fff;
+  font-weight: 600;
+}
