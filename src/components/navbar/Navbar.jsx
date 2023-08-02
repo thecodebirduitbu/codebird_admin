@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./Navbar.css";
 import Logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
 
     const [isNavActive, setNavActive] = useState(false);
 
@@ -32,23 +33,28 @@ const Navbar = () => {
       <nav className={`nav_bar ${isNavActive ? "active" : ""}`}>
         <ul>
           <li>
+            <Link to="/dashboard" className="home">
+              All Users
+            </Link>
+          </li>
+          <li>
             <Link to="/members" className="home">
               Members
             </Link>
           </li>
           <li>
-            <Link to="/" className="home">
+            <Link to="/coreteam" className="home">
               Core Team
             </Link>
           </li>
           <li>
-            <Link to="/" className="home">
+            <Link to="/events" className="home">
               Events
             </Link>
           </li>
           <li>
             <div className="buttons">
-              <button className="login">
+              <button onClick={()=>{navigate('/')}} className="login">
                 <span>
                   <i className="fa-solid fa-user"></i> Logout
                 </span>

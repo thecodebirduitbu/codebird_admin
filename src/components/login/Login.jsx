@@ -1,4 +1,4 @@
-import { Box, Heading, Input,Image } from "@chakra-ui/react";
+import { Box, Heading, Input,Image , InputGroup ,InputRightElement , Button} from "@chakra-ui/react";
 import {
   FormControl,
   FormLabel,
@@ -13,6 +13,8 @@ import {useNavigate} from 'react-router-dom'
 
 const Login = () => {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
   const [rformData, setRFormData] = useState({
     name: "",
     phone: "",
@@ -57,7 +59,7 @@ const registerSubmit = ()=>{
 
 
   return (
-    <Box >
+    <Box>
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -77,7 +79,7 @@ const registerSubmit = ()=>{
         >
           <Image src={logo} width={"10"} />
           <Heading textAlign={"center"} fontFamily="'Montserrat', sans-serif;">
-            The CodeBird
+            The CodeBird Admin
           </Heading>
         </Box>
         <Tabs variant="enclosed">
@@ -92,7 +94,7 @@ const registerSubmit = ()=>{
           <TabPanels>
             <TabPanel>
               <FormControl
-            //   onSubmit={loginSubmit}
+                //   onSubmit={loginSubmit}
                 fontStyle="bold"
                 fontFamily="'Ubuntu', sans-serif;"
                 display={"flex"}
@@ -111,13 +113,19 @@ const registerSubmit = ()=>{
                 </Box>
                 <Box>
                   <FormLabel>Password</FormLabel>
-                  <Input
-                    value={lformData.password}
-                    onChange={handleInputChangeLogin}
-                    name="password"
-                    variant="filled"
-                    placeholder="Password"
-                  />
+                  <InputGroup size="md">
+                    <Input
+                      variant="filled"
+                      pr="4.5rem"
+                      type={show ? "text" : "password"}
+                      placeholder="Enter password"
+                    />
+                    <InputRightElement width="4.5rem">
+                      <Button h="1.75rem" size="sm" onClick={handleClick}>
+                        {show ? "Hide" : "Show"}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
                 </Box>
                 <Input
                   color="white"

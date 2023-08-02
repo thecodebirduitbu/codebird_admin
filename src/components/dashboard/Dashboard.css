@@ -1,0 +1,12 @@
+.srchBtn{
+    background-color: #675cff;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    /* font-family: 'Montserrat', sans-serif; */
+    color: #fff;
+  font-weight: 600;
+  /* position: relative;
+  right: 50px; */
+  font-family: 'Work Sans', sans-serif;
+}
+
