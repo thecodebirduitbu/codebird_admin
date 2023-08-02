@@ -4,8 +4,12 @@ import "./Event.css";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { RiGalleryFill } from "react-icons/ri";
+import { GrUserExpert } from "react-icons/gr";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
+import UserCard from "../cards/UserCard";
+
+
 const Event = () => {
   return (
     <Box className="eventBox">
@@ -34,13 +38,37 @@ const Event = () => {
                 alignItems={"center"}
                 fontFamily="'Ubuntu', sans-serif;"
               >
+                <GrUserExpert />
+                Applied Students
+              </Tab>
+              <Tab
+                display={"flex"}
+                gap={"1"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontFamily="'Ubuntu', sans-serif;"
+              >
                 <BiSolidImageAdd />
                 Create Events
               </Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Box><Eventcard/></Box>
+                <Box display={'flex'} justifyContent={'center'} gap={10} flexWrap={'wrap'}>
+                  <Eventcard />
+                  <Eventcard />
+                  <Eventcard />
+                </Box>
+              </TabPanel>
+              <TabPanel>
+                <Box>
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                </Box>
               </TabPanel>
               <TabPanel>
                 <Box
@@ -96,7 +124,7 @@ const Event = () => {
                     <FormLabel>Enter Event Poster</FormLabel>
                     <Input type="file" />
                   </FormControl>
-                  <button className="eventBtn">Create Event</button>
+                  <button onClick={()=>{window.alert("event created");}} className="eventBtn">Create Event</button>
                 </Box>
               </TabPanel>
             </TabPanels>

@@ -3,52 +3,83 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Stack,
-  HStack,
   Heading,
   Text,
   Button,
   Box,
-  Divider,
   Image,
-  ButtonGroup,
-
+  Flex,
 } from "@chakra-ui/react";
 import "./Card.css";
-
+import { MdDelete } from "react-icons/md";
+import { BsPencilFill } from "react-icons/bs";
 
 const Eventcard = () => {
   return (
     <Box>
-      <Card maxW="sm">
+      <Card
+        maxW="md"
+        boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+        // border="2px solid #675cff"
+        padding={5}
+      >
+        <CardHeader>
+          <Flex spacing="4">
+            <Flex
+              flex="1"
+              gap="4"
+              alignItems="center"
+              justifyContent={"center"}
+              flexWrap="wrap"
+            >
+              <Box>
+                <Heading textAlign={"center"} color="#675cff">
+                  Freshers Orientation Program
+                </Heading>
+              </Box>
+              <Text>
+                <span className="smalltitle">Event</span> - Friday , 15/07/2023
+              </Text>
+              <Text>
+                <span className="smalltitle">Deadline</span> - Sunday,
+                10/07/2023
+              </Text>
+              <Text>
+                <span className="smalltitle">Mode</span> - Offline In Room No.
+                201
+              </Text>
+            </Flex>
+          </Flex>
+        </CardHeader>
         <CardBody>
-          <Image
-            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            alt="Green double couch with wooden legs"
-            borderRadius="lg"
-          />
-          <Stack mt="6" spacing="3">
-            <Heading size="md">Living room Sofa</Heading>
-            <Text>
-              This sofa is perfect for modern tropical spaces, baroque inspired
-              spaces, earthy toned spaces and for people who love a chic design
-              with a sprinkle of vintage design.
-            </Text>
-            <Text color="blue.600" fontSize="2xl">
-              $450
-            </Text>
-          </Stack>
+          <Text textAlign={"center"}>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam
+            blanditiis autem itaque dolorem? Rerum ipsum quia, incidunt suscipit
+            praesentium minus.
+          </Text>
         </CardBody>
-        <Divider />
-        <CardFooter>
-          <ButtonGroup spacing="2">
-            <Button variant="solid" colorScheme="blue">
-              Buy now
-            </Button>
-            <Button variant="ghost" colorScheme="blue">
-              Add to cart
-            </Button>
-          </ButtonGroup>
+        <Image
+          borderRadius={10}
+          objectFit="cover"
+          src="https://media.licdn.com/dms/image/C5622AQHewqD8RYC6Gg/feedshare-shrink_800/0/1669135675811?e=1694044800&v=beta&t=p2FWvv_4uh4O5G3sVDZ77lUGYfEdPW7247uAzR3xQtI"
+          alt="Chakra UI"
+        />
+
+        <CardFooter
+          justify="space-between"
+          flexWrap="wrap"
+          sx={{
+            "& > button": {
+              minW: "136px",
+            },
+          }}
+        >
+          <Button color="#675cff" flex="1" variant="ghost" leftIcon={<BsPencilFill />}>
+            Update Event
+          </Button>
+          <Button color="#675cff" flex="1" variant="ghost" leftIcon={<MdDelete />}>
+            Delete Event
+          </Button>
         </CardFooter>
       </Card>
     </Box>
