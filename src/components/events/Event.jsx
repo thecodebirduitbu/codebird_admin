@@ -1,9 +1,14 @@
-import Navbar from '../navbar/Navbar'
-import {  Heading, Box } from "@chakra-ui/react";
-import './Event.css'
+import Navbar from "../navbar/Navbar";
+import { Heading, Box } from "@chakra-ui/react";
+import "./Event.css";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { RiGalleryFill } from "react-icons/ri";
+import { GrUserExpert } from "react-icons/gr";
+import { Input, FormControl, FormLabel } from "@chakra-ui/react";
+import Eventcard from "../cards/Eventcard";
+import UserCard from "../cards/UserCard";
+
 
 const Event = () => {
   return (
@@ -33,14 +38,94 @@ const Event = () => {
                 alignItems={"center"}
                 fontFamily="'Ubuntu', sans-serif;"
               >
+                <GrUserExpert />
+                Applied Students
+              </Tab>
+              <Tab
+                display={"flex"}
+                gap={"1"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontFamily="'Ubuntu', sans-serif;"
+              >
                 <BiSolidImageAdd />
                 Create Events
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>Existing</TabPanel>
               <TabPanel>
-                Creating
+                <Box display={'flex'} justifyContent={'center'} gap={10} flexWrap={'wrap'}>
+                  <Eventcard />
+                  <Eventcard />
+                  <Eventcard />
+                </Box>
+              </TabPanel>
+              <TabPanel>
+                <Box>
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                  <UserCard />
+                </Box>
+              </TabPanel>
+              <TabPanel>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={6}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  borderRadius="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+                >
+                  <FormControl width="100%">
+                    <FormLabel>Enter Event Name</FormLabel>
+                    <Input
+                      focusBorderColor="#675cff"
+                      borderRadius={"20"}
+                      border="2px solid #675cff "
+                      type="text"
+                    />
+                    <FormLabel>Enter Event Desciption</FormLabel>
+                    <Input
+                      focusBorderColor="#675cff"
+                      borderRadius={"20"}
+                      border="2px solid #675cff "
+                      type="text"
+                    />
+                    <FormLabel>Enter Event Date</FormLabel>
+                    <Input
+                      focusBorderColor="#675cff"
+                      borderRadius={"20"}
+                      border="2px solid #675cff "
+                      type="text"
+                    />
+                    <FormLabel>Enter Last Registration Date</FormLabel>
+                    <Input
+                      focusBorderColor="#675cff"
+                      borderRadius={"20"}
+                      border="2px solid #675cff "
+                      type="text"
+                    />
+                    <FormLabel>
+                      Enter Event Mode (
+                      <span className="eventSmallText">
+                        If Event Mode Offline Provide Room no.
+                      </span>
+                      )
+                    </FormLabel>
+                    <Input
+                      focusBorderColor="#675cff"
+                      borderRadius={"20"}
+                      border="2px solid #675cff "
+                      type="text"
+                    />
+                    <FormLabel>Enter Event Poster</FormLabel>
+                    <Input type="file" />
+                  </FormControl>
+                  <button onClick={()=>{window.alert("event created");}} className="eventBtn">Create Event</button>
+                </Box>
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -48,6 +133,6 @@ const Event = () => {
       </Box>
     </Box>
   );
-}
+};
 
-export default Event
+export default Event;
