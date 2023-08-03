@@ -9,12 +9,32 @@ import {
   Box,
   Image,
   Flex,
+  HStack,
 } from "@chakra-ui/react";
 import "./Card.css";
 import { MdDelete } from "react-icons/md";
 import { BsPencilFill } from "react-icons/bs";
-
+import { RxCrossCircled } from "react-icons/rx";
+import Modal from "react-modal";
+import { useState } from "react";
 const Eventcard = () => {
+   const [modalIsOpen, setIsOpen] = useState(false)
+   const [dlmodalIsOpen, setdlIsOpen] = useState(false)
+   const customStyles = {
+     content: {
+       top: "50%",
+       left: "50%",
+       right: "auto",
+       bottom: "auto",
+       marginRight: "-50%",
+       transform: "translate(-50%, -50%)",
+       background:'#fff',
+       height:'21rem',
+       width:'35rem',
+  
+
+     },
+   };
   return (
     <Box>
       <Card
@@ -74,12 +94,76 @@ const Eventcard = () => {
             },
           }}
         >
-          <Button color="#675cff" flex="1" variant="ghost" leftIcon={<BsPencilFill />}>
+          <Button
+            onClick={() => setIsOpen(true)}
+            color="#675cff"
+            flex="1"
+            variant="ghost"
+            leftIcon={<BsPencilFill />}
+          >
             Update Event
           </Button>
-          <Button color="#675cff" flex="1" variant="ghost" leftIcon={<MdDelete />}>
+          <Modal
+            onRequestClose={() => {
+              setIsOpen(false);
+            }}
+            isOpen={modalIsOpen}
+          >
+            update
+            <button onClick={() => setIsOpen(false)}>close</button>
+          </Modal>
+          <Button
+            onClick={() => setdlIsOpen(true)}
+            color="#675cff"
+            flex="1"
+            variant="ghost"
+            leftIcon={<MdDelete />}
+          >
             Delete Event
           </Button>
+
+          <Modal
+            onRequestClose={() => {
+              setdlIsOpen(false);
+            }}
+            isOpen={dlmodalIsOpen}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              flexDirection={"column"}
+              gap={5}
+            >
+              <Box
+                color={"red"}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Heading textAlign={"center"} fontSize={80}>
+                  <RxCrossCircled />
+                </Heading>
+              </Box>
+              <Heading textAlign={"center"} fontSize={40}>
+                Are You Sure?
+              </Heading>
+              <Text fontSize={20}>
+                Do you really want to delete this event?
+              </Text>
+              <HStack spacing={4}>
+                <Button
+                  colorScheme="whatsapp"
+                  onClick={() => setdlIsOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button colorScheme="red">Delete</Button>
+              </HStack>
+            </Box>
+          </Modal>
         </CardFooter>
       </Card>
     </Box>
