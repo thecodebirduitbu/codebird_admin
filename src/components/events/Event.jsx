@@ -124,7 +124,7 @@ const Event = () => {
                     <FormLabel>Enter Event Poster</FormLabel>
                     <Input type="file" />
                   </FormControl>
-                  <button onClick={()=>{window.alert("event created");}} className="eventBtn">Create Event</button>
+                  <button onClick={()=>{window.alert("Event created");}} className="eventBtn">Create Event</button>
                 </Box>
               </TabPanel>
             </TabPanels>
