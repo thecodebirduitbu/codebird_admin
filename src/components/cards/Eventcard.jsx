@@ -17,6 +17,10 @@ import { BsPencilFill } from "react-icons/bs";
 import { RxCrossCircled } from "react-icons/rx";
 import Modal from "react-modal";
 import { useState } from "react";
+import { Input, FormControl, FormLabel } from "@chakra-ui/react";
+import { IoMdClose } from "react-icons/io";
+
+
 const Eventcard = () => {
    const [modalIsOpen, setIsOpen] = useState(false)
    const [dlmodalIsOpen, setdlIsOpen] = useState(false)
@@ -31,8 +35,19 @@ const Eventcard = () => {
        background:'#fff',
        height:'21rem',
        width:'35rem',
-  
-
+     },
+   };
+   const customStyles2 = {
+     content: {
+       top: "50%",
+       left: "50%",
+       right: "auto",
+       bottom: "auto",
+       marginRight: "-50%",
+       transform: "translate(-50%, -50%)",
+       background:'#fff',
+       height:'38rem',
+       width:'20rem',
      },
    };
   return (
@@ -108,9 +123,78 @@ const Eventcard = () => {
               setIsOpen(false);
             }}
             isOpen={modalIsOpen}
+            style={customStyles2}
           >
-            update
-            <button onClick={() => setIsOpen(false)}>close</button>
+            <Box display={"flex"} justifyContent={"space-between"}>
+              <Heading color="#675cff" fontSize={25}>
+                Update Event
+              </Heading>
+              <button onClick={() => setIsOpen(false)}>
+                <IoMdClose />
+              </button>
+            </Box>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              gap={6}
+              justifyContent={"center"}
+              alignItems={"center"}
+              borderRadius="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+            >
+              <FormControl width="100%">
+                <FormLabel>Enter Event Name</FormLabel>
+                <Input
+                  focusBorderColor="#675cff"
+                  borderRadius={"20"}
+                  border="2px solid #675cff "
+                  type="text"
+                />
+                <FormLabel>Enter Event Desciption</FormLabel>
+                <Input
+                  focusBorderColor="#675cff"
+                  borderRadius={"20"}
+                  border="2px solid #675cff "
+                  type="text"
+                />
+                <FormLabel>Enter Event Date</FormLabel>
+                <Input
+                  focusBorderColor="#675cff"
+                  borderRadius={"20"}
+                  border="2px solid #675cff "
+                  type="text"
+                />
+                <FormLabel>Enter Last Registration Date</FormLabel>
+                <Input
+                  focusBorderColor="#675cff"
+                  borderRadius={"20"}
+                  border="2px solid #675cff "
+                  type="text"
+                />
+                <FormLabel>
+                  Enter Event Mode (
+                  <span className="eventSmallText">
+                    If Event Mode Offline Provide Room no.
+                  </span>
+                  )
+                </FormLabel>
+                <Input
+                  focusBorderColor="#675cff"
+                  borderRadius={"20"}
+                  border="2px solid #675cff "
+                  type="text"
+                />
+                <FormLabel>Enter Event Poster</FormLabel>
+                <Input type="file" />
+              </FormControl>
+              <button
+                onClick={() => {
+                  window.alert("Event created");
+                }}
+                className="eventBtn"
+              >
+                Create Event
+              </button>
+            </Box>
           </Modal>
           <Button
             onClick={() => setdlIsOpen(true)}
