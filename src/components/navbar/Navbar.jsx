@@ -43,6 +43,11 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/transactions" className="home">
+              Transactions
+            </Link>
+          </li>
+          <li>
             <Link to="/coreteam" className="home">
               Core Team
             </Link>
