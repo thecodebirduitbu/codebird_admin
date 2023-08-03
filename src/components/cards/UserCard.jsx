@@ -5,9 +5,10 @@ import { BsPencilFill } from "react-icons/bs";
 import Modal  from "react-modal";
 import {useState} from 'react'
 import { RxCrossCircled } from "react-icons/rx";
+import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 
 const UserCard = () => {
-  // const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
   const [dlmodalIsOpen, setdlIsOpen] = useState(false);
   const customStyles = {
     content: {
@@ -22,6 +23,19 @@ const UserCard = () => {
       width: "35rem",
     },
   };
+     const customStyles2 = {
+       content: {
+         top: "50%",
+         left: "50%",
+         right: "auto",
+         bottom: "auto",
+         marginRight: "-50%",
+         transform: "translate(-50%, -50%)",
+         background: "#fff",
+         height: "38rem",
+         width: "20rem",
+       },
+     };
   return (
     <Stack
       direction={["column", "row"]}
@@ -58,7 +72,64 @@ const UserCard = () => {
             <BsPencilFill />
           </span>
         </Button>
-        <Button onClick={() => setdlIsOpen(true)} fontFamily="'Poppins', sans-serif">
+        <Modal
+          onRequestClose={() => {
+            setIsOpen(false);
+          }}
+          isOpen={dlmodalIsOpen}
+          style={customStyles2}
+          contentLabel="Example Modal"
+        >
+          <FormControl width="100%">
+            <FormLabel>Enter Event Name</FormLabel>
+            <Input
+              focusBorderColor="#675cff"
+              borderRadius={"20"}
+              border="2px solid #675cff "
+              type="text"
+            />
+            <FormLabel>Enter Event Desciption</FormLabel>
+            <Input
+              focusBorderColor="#675cff"
+              borderRadius={"20"}
+              border="2px solid #675cff "
+              type="text"
+            />
+            <FormLabel>Enter Event Date</FormLabel>
+            <Input
+              focusBorderColor="#675cff"
+              borderRadius={"20"}
+              border="2px solid #675cff "
+              type="text"
+            />
+            <FormLabel>Enter Last Registration Date</FormLabel>
+            <Input
+              focusBorderColor="#675cff"
+              borderRadius={"20"}
+              border="2px solid #675cff "
+              type="text"
+            />
+            <FormLabel>
+              Enter Event Mode (
+              <span className="eventSmallText">
+                If Event Mode Offline Provide Room no.
+              </span>
+              )
+            </FormLabel>
+            <Input
+              focusBorderColor="#675cff"
+              borderRadius={"20"}
+              border="2px solid #675cff "
+              type="text"
+            />
+            <FormLabel>Enter Event Poster</FormLabel>
+            <Input type="file" />
+          </FormControl>
+        </Modal>
+        <Button
+          onClick={() => setdlIsOpen(true)}
+          fontFamily="'Poppins', sans-serif"
+        >
           <span className="detailsHome">
             <MdDelete />
           </span>
