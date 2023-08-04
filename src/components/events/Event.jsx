@@ -8,7 +8,8 @@ import { GrUserExpert } from "react-icons/gr";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
 import UserCard from "../cards/UserCard";
-
+import mongoose from "mongoose";
+import axios from "axios";
 
 const Event = () => {
   return (
