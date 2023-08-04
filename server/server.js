@@ -1,11 +1,11 @@
-import express from 'express'
+import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import cokkie from "cookie-parser";
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 const app = express();
 dotenv.config();
 const PORT = 8000 || process.env.PORT;
@@ -19,7 +19,6 @@ app.use(cors(corsOptions));
 app.use(cokkie());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.admin_token;
@@ -47,7 +46,6 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-
 //------------------------Connect Database--------------------------
 
 mongoose
@@ -61,7 +59,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
 
 //------------------------Mongodb Models--------------------------
 
@@ -85,7 +82,7 @@ const adminSchema = new mongoose.Schema({
   phone: {
     type: Number,
     require: true,
-  }
+  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -136,7 +133,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-
 adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);
@@ -153,30 +149,16 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-
 const Admin = mongoose.model("Admin", adminSchema);
 const User = mongoose.model("User", userSchema);
-
 
 //------------------------Controllers--------------------------
 
 //1.Register Controller
 const register = async (req, res) => {
   try {
-    const {
-      password,
-      cpassword,
-      name,
-      email,
-      phone,
-    } = req.body;
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !password ||
-      !cpassword
-    ) {
+    const { password, cpassword, name, email, phone } = req.body;
+    if (!name || !email || !phone || !password || !cpassword) {
       return res
         .status(400)
         .json({ error: "Fill required fields", success: false });
@@ -208,7 +190,6 @@ const register = async (req, res) => {
     return res.status(500).send({ error: error, success: false });
   }
 };
-
 
 //2.Login Controller
 const login = async (req, res) => {
@@ -244,43 +225,43 @@ const login = async (req, res) => {
   }
 };
 
-const userData = async (req,res)=>{
-    try {
+//3.Users Datafetch Controller
+const userData = async (req, res) => {
+  try {
     const users = await User.find().exec();
     res.json(users);
-        
-    } catch (error) {
-        res.status(200).json(error)
-    } 
-}
+  } catch (error) {
+    res.status(200).json(error);
+  }
+};
 
-const membersData = async (req,res)=>{
-    try {
-    const users = await User.find({isPaymentDone:true});
+//4.Members Datafetch Controller
+const membersData = async (req, res) => {
+  try {
+    const users = await User.find({ isPaymentDone: true });
     res.json(users);
-    } catch (error) {
-        res.status(200).json(error)
-    } 
-}
+  } catch (error) {
+    res.status(200).json(error);
+  }
+};
 
+//5.Log out Controller
 const logout = (req, res) => {
-console.log('working');
+  console.log("working");
   res.clearCookie("admin_token");
   res.status(200).json({ msg: "logout" });
 };
 
-
 //------------------------Routes--------------------------
 
-app.post('/api/register',register)
-app.post('/api/login',login)
-app.get('/api/members',verifyToken,membersData)
-app.get('/api/users',verifyToken,userData)
+app.post("/api/register", register);
+app.post("/api/login", login);
+app.get("/api/members", verifyToken, membersData);
+app.get("/api/users", verifyToken, userData);
 app.get("/api/logout", logout);
-
 
 //------------------------Listen--------------------------
 
-app.listen(PORT,()=>{
-    console.log('Server Start At Port '+PORT);
-})
+app.listen(PORT, () => {
+  console.log("Server Start At Port " + PORT);
+});
