@@ -3,7 +3,7 @@ import "./Navbar.css";
 import Logo from "../../assets/logo.png";
 import { Link , useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import url from "../helper/helper";
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -15,11 +15,9 @@ const Navbar = () => {
 
       const logout = async () => {
         try {
-          await axios.get("http://localhost:8000/api/logout",
-              {
-                withCredentials: true,
-              }
-            );
+          await axios.get(`${url}/api/logout`, {
+            withCredentials: true,
+          });
           console.log("log out");
           navigate("/");
         } catch (error) {

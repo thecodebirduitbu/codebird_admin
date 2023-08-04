@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-
+import url from "../helper/helper";
 
 
 const Login = () => {
@@ -57,7 +57,7 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-           await axios.post("http://localhost:8000/api/login", lformData, {
+           await axios.post(`${url}/api/login`, lformData, {
              withCredentials: true,
            });
             toast.success("Login Done!");
@@ -74,13 +74,9 @@ const Login = () => {
       toast.error("Please fill all required fields!");
     } else{
         try {
-            await axios.post(
-              "http://localhost:8000/api/register",
-              rformData,
-              {
-                withCredentials: true,
-              }
-            );
+            await axios.post(`${url}/api/register`, rformData, {
+              withCredentials: true,
+            });
             toast.success("Register Done,You Can Login Now!");
             setRFormData({
               ...rformData,

@@ -8,13 +8,15 @@ import { FaRupeeSign } from "react-icons/fa";
 import TransactionsCard from "../cards/TransactionsCard";
 import {useState , useEffect} from 'react'
 import axios from "axios";
+import url from "../helper/helper";
+
 
 const Transaction = () => {
 
   const [data, setData] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/transactions", {
+      .get(`${url}/api/transactions`, {
         withCredentials: true,
       })
       .then((response) => {
