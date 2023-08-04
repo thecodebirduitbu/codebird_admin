@@ -16,3 +16,59 @@
     color: #fff;
   font-weight: 600;
 }
+.posterevent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.profilimg{
+  height: 400px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+#imgInput{
+    display: none;
+}
+@media (max-width:719px) {
+  .profilimg{
+  height: 355px;
+
+}
+}
+@media (max-width:520px) {
+  .profilimg{
+  height: 300px;
+
+}
+}
+@media (max-width:480px) {
+  .profilimg{
+  height: 280px;
+}
+}
+@media (max-width:446px) {
+  .profilimg{
+  height: 260px;
+}
+}
+@media (max-width:426px) {
+  .profilimg{
+  height: 240px;
+}
+}
+@media (max-width:406px) {
+  .profilimg{
+  height: 220px;
+}
+}
+@media (max-width:386px) {
+  .profilimg{
+  height: 200px;
+}
+}
+@media (max-width:360px) {
+  .profilimg{
+  height: 180px;
+}
+}
