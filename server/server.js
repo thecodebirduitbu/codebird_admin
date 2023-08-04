@@ -1,11 +1,13 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import dotenv from "dotenv";
-import cokkie from "cookie-parser";
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const cokkie = require("cookie-parser");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+
 
 const app = express();
 dotenv.config();
