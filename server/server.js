@@ -6,6 +6,7 @@ import cokkie from "cookie-parser";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 const app = express();
 dotenv.config();
 const PORT = 8000 || process.env.PORT;

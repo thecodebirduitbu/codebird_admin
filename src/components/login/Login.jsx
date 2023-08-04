@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 
+
+
 const Login = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -55,13 +57,9 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-           await axios.post(
-              "http://localhost:8000/api/login",
-              lformData,
-              {
-                withCredentials: true,
-              }
-            );
+           await axios.post("http://localhost:8000/api/login", lformData, {
+             withCredentials: true,
+           });
             toast.success("Login Done!");
             navigate("/dashboard");
          } catch (error) {

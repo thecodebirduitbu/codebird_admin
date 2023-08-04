@@ -6,6 +6,9 @@ import Members from './components/members/Members';
 import Event from './components/events/Event';
 import CoreTeam from './components/core team/CoreTeam';
 import Transaction from './components/Transaction/Transaction';
+
+
+// dotenv.config();
 function App() {
   return (
     <div>
