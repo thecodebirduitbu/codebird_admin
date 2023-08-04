@@ -49,7 +49,7 @@ const verifyToken = async (req, res, next) => {
 //------------------------Connect Database--------------------------
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect( process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -205,9 +205,7 @@ const login = async (req, res) => {
           { id: userExist._id, email: userExist.email },
           process.env.JWT
         );
-        const expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
         const options = {
-          expires: expirationDate,
           httpOnly: true,
         };
         return res.cookie("admin_token", token, options).status(201).json({
@@ -263,5 +261,5 @@ app.get("/api/logout", logout);
 //------------------------Listen--------------------------
 
 app.listen(PORT, () => {
-  console.log("Server Start At Port " + PORT);
+  console.log("Server Start At Port " + PORT + process.env.MONGODB_URI);
 });
