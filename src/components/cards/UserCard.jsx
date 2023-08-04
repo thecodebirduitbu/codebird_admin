@@ -1,13 +1,13 @@
-import {  Stack ,HStack, Heading ,Text, Button, Box } from "@chakra-ui/react";
-import './Card.css'
+import { Stack, HStack, Heading, Text, Button, Box } from "@chakra-ui/react";
+import "./Card.css";
 import { MdDelete } from "react-icons/md";
 import { BsPencilFill } from "react-icons/bs";
-import Modal  from "react-modal";
-import {useState} from 'react'
+import Modal from "react-modal";
+import { useState } from "react";
 import { RxCrossCircled } from "react-icons/rx";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 
-const UserCard = () => {
+const UserCard = ({ name, email, phone, roll, dept, batch }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [dlmodalIsOpen, setdlIsOpen] = useState(false);
   const customStyles = {
@@ -23,19 +23,19 @@ const UserCard = () => {
       width: "35rem",
     },
   };
-     const customStyles2 = {
-       content: {
-         top: "50%",
-         left: "50%",
-         right: "auto",
-         bottom: "auto",
-         marginRight: "-50%",
-         transform: "translate(-50%, -50%)",
-         background: "#fff",
-         height: "38rem",
-         width: "20rem",
-       },
-     };
+  const customStyles2 = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      background: "#fff",
+      height: "38rem",
+      width: "20rem",
+    },
+  };
   return (
     <Stack
       direction={["column", "row"]}
@@ -49,22 +49,22 @@ const UserCard = () => {
       flexWrap={"wrap"}
     >
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Name</span> : Puskar Roy
+        <span className="detailsHome">Name</span> : {name}
       </Text>
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Email</span> : puskarroy@gmail.com
+        <span className="detailsHome">Email</span> : {email}
       </Text>
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Department</span> : CSE
+        <span className="detailsHome">Department</span> : {dept}
       </Text>
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Roll</span> : 20221013
+        <span className="detailsHome">Roll</span> : {roll}
       </Text>
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Batch</span> : 2022-2026
+        <span className="detailsHome">Batch</span> : {batch}
       </Text>
       <Text fontFamily="'Poppins', sans-serif">
-        <span className="detailsHome">Phone</span> : 7449585365
+        <span className="detailsHome">Phone</span> : {phone}
       </Text>
       <HStack spacing={3}>
         <Button fontFamily="'Poppins', sans-serif">

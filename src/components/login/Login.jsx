@@ -1,15 +1,19 @@
-import { Box, Heading, Input,Image , InputGroup ,InputRightElement , Button} from "@chakra-ui/react";
 import {
-  FormControl,
-  FormLabel,
+  Box,
+  Heading,
+  Input,
+  Image,
+  InputGroup,
+  InputRightElement,
+  Button,
 } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import logo from '../../assets/logo.png'
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom'
-
-
-
+import logo from "../../assets/logo.png";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +29,7 @@ const Login = () => {
 
   const [lformData, setLFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleInputChangeLogin = (event) => {
@@ -44,17 +48,56 @@ const Login = () => {
     });
   };
 
-const loginSubmit = ()=>{
-    // e.preventDefault();
-    console.log(lformData);
-    navigate('/dashboard')
-}
-const registerSubmit = ()=>{
-    // e.preventDefault();
-    console.log(rformData);
-    navigate("/dashboard");
+  const loginSubmit = async () => {
+    if (!lformData.email || !lformData.password) {
+      console.log(lformData);
+      toast.error("Please fill all required fields!");
+    } else {
+      console.log(lformData);
+      try {
+           await axios.post(
+              "http://localhost:8000/api/login",
+              lformData,
+              {
+                withCredentials: true,
+              }
+            );
+            toast.success("Login Done!");
+            navigate("/dashboard");
+         } catch (error) {
+            console.log(error);
+           toast.error("Login Failed!");
+         }
+    }
+  };
 
-}
+  const registerSubmit = async () => {
+    if (!rformData.email || !rformData.password || !rformData.name || !rformData.cpassword || !rformData.phone ) {
+      toast.error("Please fill all required fields!");
+    } else{
+        try {
+            await axios.post(
+              "http://localhost:8000/api/register",
+              rformData,
+              {
+                withCredentials: true,
+              }
+            );
+            toast.success("Register Done,You Can Login Now!");
+            setRFormData({
+              ...rformData,
+              name: "",
+              phone: "",
+              email: "",
+              password: "",
+              cpassword: ""
+            });
+         } catch (error) {
+            console.log(error);
+           toast.error("Register Failed!");
+         }
+    }
+  };
 
 
 
@@ -115,6 +158,9 @@ const registerSubmit = ()=>{
                   <FormLabel>Password</FormLabel>
                   <InputGroup size="md">
                     <Input
+                      value={lformData.password}
+                      onChange={handleInputChangeLogin}
+                      name="password"
                       variant="filled"
                       pr="4.5rem"
                       type={show ? "text" : "password"}
@@ -206,6 +252,7 @@ const registerSubmit = ()=>{
           </TabPanels>
         </Tabs>
       </Box>
+      <Toaster position="top-center" reverseOrder={false} />
     </Box>
   );
 };
