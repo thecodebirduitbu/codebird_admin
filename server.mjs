@@ -1,8 +1,8 @@
-import { Express } from "express";
+import express from "express";
 const app = Express();
 
 require("dotenv").config()
-const eventsRoute = require("./routes/events");
+import eventsRoute from "./routes/events";
 
 app.use(Express.json());
 app.use("/create-event", eventsRoute)

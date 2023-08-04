@@ -14,7 +14,9 @@ const eventSchema = new mongoose.Schema({
     description: String,
     date: Date,
     registrationDate: Date,
-    mode: String
+    mode: String,
+    poster: String,
+
 })
 
 const event = mongoose.model('event', eventSchema);
@@ -33,6 +35,7 @@ Router.post('/create-event', async (req, res) => {
             date,
             registrationDate,
             mode,
+            poster,
         })
 
         await newEvent.save();
