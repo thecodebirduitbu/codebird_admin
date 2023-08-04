@@ -107,7 +107,7 @@ const Login = () => {
         display={"flex"}
         flexDirection={"column"}
         gap={"10"}
-        width="60%"
+        width="70%"
         margin="0 auto"
         borderRadius={10}
         marginTop={10}

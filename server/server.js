@@ -133,6 +133,35 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+
+const paymentSchema = new mongoose.Schema({
+  razorpay_order_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_payment_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_signature: {
+    type: String,
+    required: true,
+  },
+  userName: {
+    type: String,
+    required: true,
+  },
+  userPhone: {
+    type: Number,
+    required: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
+  },
+});
+
+
 adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);
@@ -151,6 +180,8 @@ userSchema.pre("save", async function (next) {
 
 const Admin = mongoose.model("Admin", adminSchema);
 const User = mongoose.model("User", userSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+
 
 //------------------------Controllers--------------------------
 
@@ -249,12 +280,22 @@ const logout = (req, res) => {
   res.clearCookie("admin_token");
   res.status(200).json({ msg: "logout" });
 };
+//6.Payments Datafetch Controller
+const paymentData = async (req, res) => {
+  try {
+    const payments = await Payment.find().exec();
+    res.json(payments);
+  } catch (error) {
+    res.status(200).json(error);
+  }
+};
 
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
 app.post("/api/login", login);
 app.get("/api/members", verifyToken, membersData);
+app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
 app.get("/api/logout", logout);
 

@@ -6,3 +6,8 @@
 .smalltitle{
   color: #675cff;
 }
+.payid{
+  font-weight: 600;
+  /* text-decoration: underline; */
+  font-style: italic;
+}
