@@ -14,8 +14,8 @@ const PORT = 8000 || process.env.PORT;
 
 //------------------------Middlewares--------------------------
 const corsOptions = {
-  // origin: "http://localhost:5173",
-  origin: "https://codebird-admin.vercel.app",
+  origin: "http://localhost:5173", //use when in local server
+  // origin: "https://codebird-admin.vercel.app",
   credentials: true,
 };
 app.use(cors(corsOptions));

@@ -7,14 +7,12 @@ import "./Dashboard.css";
 import { FaUserCircle, FaLaptopCode } from "react-icons/fa";
 import { GoCodeOfConduct } from "react-icons/go";
 import { AiOutlineTeam } from "react-icons/ai";
-import { useEffect , useState} from 'react'
+import { useEffect, useState } from "react";
 import axios from "axios";
 import url from "../helper/helper";
 
-
-
 const Dashboard = () => {
-  const [data , setData] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     axios
       .get(`${url}/api/users`, {
@@ -30,13 +28,19 @@ const Dashboard = () => {
   }, []);
   const usersNumber = data.length;
 
-
   return (
     <div>
       <Navbar />
       <Heading textAlign={"center"}>Current Data</Heading>
+
       <div className="show">
-        <div className="card">
+        <Box
+          className="card"
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          flexDirection={"row"}
+        >
           <div className="item item--1">
             <FaUserCircle />
             <span className="quantity"> {usersNumber} </span>
@@ -57,7 +61,7 @@ const Dashboard = () => {
             <span className="quantity"> 3 </span>
             <span className="text text--4"> Events </span>
           </div>
-        </div>
+        </Box>
       </div>
       <Box>
         <Heading textAlign={"center"}>All Users ({usersNumber})</Heading>

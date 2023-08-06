@@ -19,6 +19,7 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { IoMdClose } from "react-icons/io";
+import uploadpic from "../../assets/upload4.jpg";
 
 
 const Eventcard = () => {
@@ -50,6 +51,41 @@ const Eventcard = () => {
        width:'20rem',
      },
    };
+
+    const [userC, setUserC] = useState({
+      eventNameC: "",
+      eventDateC: "",
+      eventdescC: "",
+      eventLastDateC: "",
+      eventModeC: "",
+      eventProfileC: "",
+    });
+    const [file, setFile] = useState();
+
+    const handelUser = (e) => {
+      const { name, value } = e.target;
+      setUserC({ ...userC, [name]: value });
+    };
+
+    const onUploadC = async (e) => {
+      const base64 = await convertToBase64(e.target.files[0]);
+      setFile(base64);
+      setUserC({ ...userC, eventProfileC: base64 });
+    };
+    function convertToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      });
+    }
   return (
     <Box>
       <Card
@@ -125,8 +161,8 @@ const Eventcard = () => {
             isOpen={modalIsOpen}
             style={customStyles2}
           >
-            <Box display={"flex"} justifyContent={"space-between"}>
-              <Heading color="#675cff" fontSize={25}>
+            <Box display={"flex"} justifyContent={"space-between"} marginBottom={5}>
+              <Heading  color="#675cff" fontSize={25}>
                 Update Event
               </Heading>
               <button onClick={() => setIsOpen(false)}>
@@ -142,8 +178,21 @@ const Eventcard = () => {
               borderRadius="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
             >
               <FormControl width="100%">
+                <div className="posterevent">
+                  <FormLabel htmlFor="imgInputC">
+                    <img
+                      className="profilimgC"
+                      src={file || uploadpic}
+                      alt="img"
+                    />
+                  </FormLabel>
+                  <input id="imgInputC" onChange={onUploadC} type="file" />
+                </div>
                 <FormLabel>Enter Event Name</FormLabel>
                 <Input
+                  name="eventName"
+                  value={userC.eventNameC}
+                  onChange={handelUser}
                   focusBorderColor="#675cff"
                   borderRadius={"20"}
                   border="2px solid #675cff "
@@ -151,6 +200,9 @@ const Eventcard = () => {
                 />
                 <FormLabel>Enter Event Desciption</FormLabel>
                 <Input
+                  name="eventdesc"
+                  value={userC.eventdescC}
+                  onChange={handelUser}
                   focusBorderColor="#675cff"
                   borderRadius={"20"}
                   border="2px solid #675cff "
@@ -158,6 +210,9 @@ const Eventcard = () => {
                 />
                 <FormLabel>Enter Event Date</FormLabel>
                 <Input
+                  name="eventDate"
+                  value={userC.eventDateC}
+                  onChange={handelUser}
                   focusBorderColor="#675cff"
                   borderRadius={"20"}
                   border="2px solid #675cff "
@@ -165,6 +220,9 @@ const Eventcard = () => {
                 />
                 <FormLabel>Enter Last Registration Date</FormLabel>
                 <Input
+                  name="eventLastDate"
+                  value={userC.eventLastDateC}
+                  onChange={handelUser}
                   focusBorderColor="#675cff"
                   borderRadius={"20"}
                   border="2px solid #675cff "
@@ -178,21 +236,22 @@ const Eventcard = () => {
                   )
                 </FormLabel>
                 <Input
+                  name="eventMode"
+                  value={userC.eventModeC}
+                  onChange={handelUser}
                   focusBorderColor="#675cff"
                   borderRadius={"20"}
                   border="2px solid #675cff "
                   type="text"
                 />
-                <FormLabel>Enter Event Poster</FormLabel>
-                <Input type="file" />
               </FormControl>
               <button
                 onClick={() => {
-                  window.alert("Event created");
+                  console.log(userC);
                 }}
                 className="eventBtn"
               >
-                Create Event
+                Update Event
               </button>
             </Box>
           </Modal>

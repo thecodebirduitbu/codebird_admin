@@ -11,3 +11,56 @@
   /* text-decoration: underline; */
   font-style: italic;
 }
+.profilimg{
+  height: 100px;
+  margin: 0 7px;
+}
+img.profilimgC {
+    margin: 0 6px;
+}
+#imgInputC{
+    display: none;
+}
+
+@media (max-width:719px) {
+  .profilimg{
+  height: 235px;
+
+}
+}
+@media (max-width:520px) {
+  .profilimg{
+  height: 300px;
+
+}
+}
+@media (max-width:480px) {
+  .profilimg{
+  height: 280px;
+}
+}
+@media (max-width:446px) {
+  .profilimg{
+  height: 260px;
+}
+}
+@media (max-width:426px) {
+  .profilimg{
+  height: 240px;
+}
+}
+@media (max-width:406px) {
+  .profilimg{
+  height: 220px;
+}
+}
+@media (max-width:386px) {
+  .profilimg{
+  height: 200px;
+}
+}
+@media (max-width:360px) {
+  .profilimg{
+  height: 180px;
+}
+}
