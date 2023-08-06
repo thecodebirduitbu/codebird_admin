@@ -6,8 +6,12 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { RxCrossCircled } from "react-icons/rx";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
+import axios from "axios";
+import url from "../helper/helper";
+import { Toaster, toast } from "react-hot-toast";
 
-const UserCard = ({ name, email, phone, roll, dept, batch }) => {
+
+const UserCard = ({ name, email, phone, roll, dept, batch , id }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [dlmodalIsOpen, setdlIsOpen] = useState(false);
   const customStyles = {
@@ -23,6 +27,23 @@ const UserCard = ({ name, email, phone, roll, dept, batch }) => {
       width: "35rem",
     },
   };
+
+  const handel = async ()=>{
+    try {
+      const res = await axios.delete(`${url}/api/users/${id}`, {
+        withCredentials: true,
+      });
+      if (res) {
+        toast.success("Delete");
+        setTimeout(() => {
+          setdlIsOpen(false);
+          window.location.reload();
+        }, Math.floor(Math.random() * 1001) + 700);
+      }
+    } catch (error) {
+      console.log('error');
+    }
+  }
   const customStyles2 = {
     content: {
       top: "50%",
@@ -167,11 +188,14 @@ const UserCard = ({ name, email, phone, roll, dept, batch }) => {
               <Button colorScheme="whatsapp" onClick={() => setdlIsOpen(false)}>
                 Cancel
               </Button>
-              <Button colorScheme="red">Delete</Button>
+              <Button onClick={handel} colorScheme="red">
+                Delete
+              </Button>
             </HStack>
           </Box>
         </Modal>
       </HStack>
+      <Toaster position="top-center" reverseOrder={false} />
     </Stack>
   );
 };

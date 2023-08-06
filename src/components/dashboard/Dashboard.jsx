@@ -107,6 +107,7 @@ const Dashboard = () => {
                 roll={item.roll}
                 batch={item.batch}
                 phone={item.phone}
+                id={item._id}
               />
             );
           })}

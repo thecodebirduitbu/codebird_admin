@@ -271,7 +271,7 @@ const userData = async (req, res) => {
 const membersData = async (req, res) => {
   try {
     const users = await User.find({ isPaymentDone: true });
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     res.status(200).json(error);
   }
@@ -289,7 +289,18 @@ const paymentData = async (req, res) => {
     const payments = await Payment.find().exec();
     res.json(payments);
   } catch (error) {
-    res.status(200).json(error);
+    res.status(400).json(error);
+  }
+};
+
+
+const userDelete = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await User.findOneAndDelete({ _id: id });
+    res.status(200).json("Delete");   
+  } catch (error) {
+    res.status(400).json(error);
   }
 };
 
@@ -300,6 +311,7 @@ app.post("/api/login", login);
 app.get("/api/members", verifyToken, membersData);
 app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
+app.delete("/api/users/:id", verifyToken, userDelete);
 app.get("/api/logout", logout);
 
 //------------------------Listen--------------------------
