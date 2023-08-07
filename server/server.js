@@ -1,18 +1,21 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import dotenv from "dotenv";
-import cokkie from "cookie-parser";
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const cokkie = require("cookie-parser");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+
+
 const app = express();
 dotenv.config();
 const PORT = 8000 || process.env.PORT;
 
 //------------------------Middlewares--------------------------
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "http://localhost:5173", //use when in local server
+  // origin: "https://codebird-admin.vercel.app",
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -133,6 +136,35 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+
+const paymentSchema = new mongoose.Schema({
+  razorpay_order_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_payment_id: {
+    type: String,
+    required: true,
+  },
+  razorpay_signature: {
+    type: String,
+    required: true,
+  },
+  userName: {
+    type: String,
+    required: true,
+  },
+  userPhone: {
+    type: Number,
+    required: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
+  },
+});
+
+
 adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);
@@ -151,6 +183,8 @@ userSchema.pre("save", async function (next) {
 
 const Admin = mongoose.model("Admin", adminSchema);
 const User = mongoose.model("User", userSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+
 
 //------------------------Controllers--------------------------
 
@@ -237,7 +271,7 @@ const userData = async (req, res) => {
 const membersData = async (req, res) => {
   try {
     const users = await User.find({ isPaymentDone: true });
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     res.status(200).json(error);
   }
@@ -249,17 +283,61 @@ const logout = (req, res) => {
   res.clearCookie("admin_token");
   res.status(200).json({ msg: "logout" });
 };
+//6.Payments Datafetch Controller
+const paymentData = async (req, res) => {
+  try {
+    const payments = await Payment.find().exec();
+    res.json(payments);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const userDelete = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await User.findOneAndDelete({ _id: id });
+    res.status(200).json("Delete");   
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const userUpdate = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const update = await User.findByIdAndUpdate({ _id: id },req.body);
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+
+};
+
+const userOneData = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const update = await User.findById({ _id: id });
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
 app.post("/api/login", login);
+app.patch("/api/update/:id",userUpdate);
 app.get("/api/members", verifyToken, membersData);
+app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
 app.get("/api/logout", logout);
+app.get("/api/user/:id", verifyToken, userOneData);
+app.delete("/api/users/:id", verifyToken, userDelete);
 
 //------------------------Listen--------------------------
 
 app.listen(PORT, () => {
-  console.log("Server Start At Port " + PORT + process.env.MONGODB_URI);
+  console.log("Server Start At Port " + PORT);
 });

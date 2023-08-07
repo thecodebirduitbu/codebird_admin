@@ -10,7 +10,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import url from "../helper/helper";
 
 
 const Members = () => {
@@ -18,7 +18,7 @@ const Members = () => {
  const [data, setData] = useState([]);
  useEffect(() => {
    axios
-     .get("http://localhost:8000/api/members", {
+     .get(`${url}/api/members`, {
        withCredentials: true,
      })
      .then((response) => {
@@ -79,6 +79,7 @@ const Members = () => {
                 roll={item.roll}
                 batch={item.batch}
                 phone={item.phone}
+                id={item._id}
               />
             );
           })}

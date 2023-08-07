@@ -14,6 +14,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
+import url from "../helper/helper";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,15 +57,14 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-           await axios.post(
-              "http://localhost:8000/api/login",
-              lformData,
-              {
-                withCredentials: true,
-              }
-            );
+           await axios.post(`${url}/api/login`, lformData, {
+             withCredentials: true,
+           });
             toast.success("Login Done!");
-            navigate("/dashboard");
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, Math.floor(Math.random() * 1001) + 700);
+            
          } catch (error) {
             console.log(error);
            toast.error("Login Failed!");
@@ -76,13 +77,9 @@ const Login = () => {
       toast.error("Please fill all required fields!");
     } else{
         try {
-            await axios.post(
-              "http://localhost:8000/api/register",
-              rformData,
-              {
-                withCredentials: true,
-              }
-            );
+            await axios.post(`${url}/api/register`, rformData, {
+              withCredentials: true,
+            });
             toast.success("Register Done,You Can Login Now!");
             setRFormData({
               ...rformData,
@@ -107,7 +104,7 @@ const Login = () => {
         display={"flex"}
         flexDirection={"column"}
         gap={"10"}
-        width="60%"
+        width="70%"
         margin="0 auto"
         borderRadius={10}
         marginTop={10}

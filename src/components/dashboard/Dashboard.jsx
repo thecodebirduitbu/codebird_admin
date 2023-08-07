@@ -7,17 +7,16 @@ import "./Dashboard.css";
 import { FaUserCircle, FaLaptopCode } from "react-icons/fa";
 import { GoCodeOfConduct } from "react-icons/go";
 import { AiOutlineTeam } from "react-icons/ai";
-import { useEffect , useState} from 'react'
+import { useEffect, useState } from "react";
 import axios from "axios";
-
-
-
+import url from "../helper/helper";
 
 const Dashboard = () => {
-  const [data , setData] = useState([]);
+  const [data, setData] = useState([]);
+  const [memdata, setmemData] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/users", {
+      .get(`${url}/api/users`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -28,15 +27,23 @@ const Dashboard = () => {
         console.log(error);
       });
   }, []);
+  
+  const memberNumber = memdata.length;
   const usersNumber = data.length;
-
 
   return (
     <div>
       <Navbar />
       <Heading textAlign={"center"}>Current Data</Heading>
+
       <div className="show">
-        <div className="card">
+        <Box
+          className="card"
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          flexDirection={"row"}
+        >
           <div className="item item--1">
             <FaUserCircle />
             <span className="quantity"> {usersNumber} </span>
@@ -44,7 +51,7 @@ const Dashboard = () => {
           </div>
           <div className="item item--2">
             <GoCodeOfConduct />
-            <span className="quantity"> 50 </span>
+            <span className="quantity"> {memberNumber} </span>
             <span className="text text--2"> Members</span>
           </div>
           <div className="item item--3">
@@ -57,7 +64,7 @@ const Dashboard = () => {
             <span className="quantity"> 3 </span>
             <span className="text text--4"> Events </span>
           </div>
-        </div>
+        </Box>
       </div>
       <Box>
         <Heading textAlign={"center"}>All Users ({usersNumber})</Heading>
@@ -103,6 +110,7 @@ const Dashboard = () => {
                 roll={item.roll}
                 batch={item.batch}
                 phone={item.phone}
+                id={item._id}
               />
             );
           })}
