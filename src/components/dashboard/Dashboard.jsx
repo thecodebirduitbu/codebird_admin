@@ -13,6 +13,7 @@ import url from "../helper/helper";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  const [memdata, setmemData] = useState([]);
   useEffect(() => {
     axios
       .get(`${url}/api/users`, {
@@ -26,6 +27,8 @@ const Dashboard = () => {
         console.log(error);
       });
   }, []);
+  
+  const memberNumber = memdata.length;
   const usersNumber = data.length;
 
   return (
@@ -48,7 +51,7 @@ const Dashboard = () => {
           </div>
           <div className="item item--2">
             <GoCodeOfConduct />
-            <span className="quantity"> 50 </span>
+            <span className="quantity"> {memberNumber} </span>
             <span className="text text--2"> Members</span>
           </div>
           <div className="item item--3">

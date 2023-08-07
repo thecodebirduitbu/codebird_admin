@@ -293,7 +293,6 @@ const paymentData = async (req, res) => {
   }
 };
 
-
 const userDelete = async (req, res) => {
   const id = req.params.id;
   try {
@@ -304,18 +303,41 @@ const userDelete = async (req, res) => {
   }
 };
 
+const userUpdate = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const update = await User.findByIdAndUpdate({ _id: id },req.body);
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+
+};
+
+const userOneData = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const update = await User.findById({ _id: id });
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
 app.post("/api/login", login);
+app.patch("/api/update/:id",userUpdate);
 app.get("/api/members", verifyToken, membersData);
 app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
-app.delete("/api/users/:id", verifyToken, userDelete);
 app.get("/api/logout", logout);
+app.get("/api/user/:id", verifyToken, userOneData);
+app.delete("/api/users/:id", verifyToken, userDelete);
 
 //------------------------Listen--------------------------
 
 app.listen(PORT, () => {
-  console.log("Server Start At Port " + PORT + process.env.MONGODB_URI);
+  console.log("Server Start At Port " + PORT);
 });

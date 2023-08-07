@@ -61,7 +61,10 @@ const Login = () => {
              withCredentials: true,
            });
             toast.success("Login Done!");
-            navigate("/dashboard");
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, Math.floor(Math.random() * 1001) + 700);
+            
          } catch (error) {
             console.log(error);
            toast.error("Login Failed!");
