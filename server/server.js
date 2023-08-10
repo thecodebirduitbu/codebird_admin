@@ -163,6 +163,32 @@ const paymentSchema = new mongoose.Schema({
     required: true,
   },
 });
+const coreTeamSchema = new mongoose.Schema({
+  pimg: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  clubPosition: {
+    type: String,
+    required: true,
+  },
+  linkedin: {
+    type: String,
+  },
+  twitter: {
+    type: String,
+  },
+  instagram: {
+    type: Number,
+  },
+  facebook: {
+    type: String,
+  },
+});
 
 
 adminSchema.pre("save", async function (next) {
@@ -184,6 +210,7 @@ userSchema.pre("save", async function (next) {
 const Admin = mongoose.model("Admin", adminSchema);
 const User = mongoose.model("User", userSchema);
 const Payment = mongoose.model("Payment", paymentSchema);
+const Team = mongoose.model("Coreteam", coreTeamSchema);
 
 
 //------------------------Controllers--------------------------
@@ -283,6 +310,7 @@ const logout = (req, res) => {
   res.clearCookie("admin_token");
   res.status(200).json({ msg: "logout" });
 };
+
 //6.Payments Datafetch Controller
 const paymentData = async (req, res) => {
   try {
@@ -293,6 +321,7 @@ const paymentData = async (req, res) => {
   }
 };
 
+//7.Users Data Delete Controller
 const userDelete = async (req, res) => {
   const id = req.params.id;
   try {
@@ -303,6 +332,7 @@ const userDelete = async (req, res) => {
   }
 };
 
+//8.Users Data Update Controller
 const userUpdate = async (req, res) => {
   const id = req.params.id;
   try {
@@ -314,6 +344,7 @@ const userUpdate = async (req, res) => {
 
 };
 
+//9.Single Users Data Controller
 const userOneData = async (req, res) => {
   const id = req.params.id;
   try {
@@ -324,6 +355,64 @@ const userOneData = async (req, res) => {
   }
 };
 
+//10. Core Team Data Create Controller
+const createTeam = async (req,res)=>{
+  const {name , position , instagram , facebook , linkedin , twitter ,profile} = req.body;
+  if(!name || !position){
+    return res
+    .status(400)
+    .json({ error: "Fill required fields", success: false });
+  }
+  const userExist = await Team.findOne({ name: name });
+  if(userExist){
+      return res
+        .status(400)
+        .json({ error: "User Already Exist", success: false });
+    }
+
+  try {
+   const newMember = new Team({
+     name: name,
+     clubPosition: position,
+     insta:instagram,
+     facebook:facebook,
+     linkedin:linkedin,
+     twitter:twitter,
+     pimg:profile
+   });
+   console.log("done");
+   await newMember.save();
+    res
+      .status(200)
+      .json({ message: "CoreTeam Member Registration Done!", success: true });
+
+  } catch (error) {
+    res.status(400).json({ error: error, success: false });
+  }
+}
+
+//11. Single Core Team Data Controller
+const singleCoreTeam = async(req,res)=>{
+  const id = req.params.id;
+  try {
+    const member = await Team.findById({ _id: id });
+    res.status(200).json(member);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
+
+//12. All Core Members Data
+const teamData = async (req,res)=>{
+  try {
+    const member = await Team.find().exec();
+    res.json(member)
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
+
+
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
@@ -332,6 +421,14 @@ app.patch("/api/update/:id",userUpdate);
 app.get("/api/members", verifyToken, membersData);
 app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
+
+app.post("/api/coreTeam",createTeam);
+
+app.get("/api/coreTeam",teamData);
+app.get("/api/coreTeam/:id",singleCoreTeam);
+app.patch("/api/coreTeam",(req,res)=>{res.json("working")});
+app.delete("/api/coreTeam",(req,res)=>{res.json("working")});
+
 app.get("/api/logout", logout);
 app.get("/api/user/:id", verifyToken, userOneData);
 app.delete("/api/users/:id", verifyToken, userDelete);
