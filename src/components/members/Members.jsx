@@ -8,12 +8,35 @@ import {
 } from "@chakra-ui/react";
 
 import { SearchIcon } from "@chakra-ui/icons";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import url from "../helper/helper";
+
+
 const Members = () => {
+
+ const [data, setData] = useState([]);
+ useEffect(() => {
+   axios
+     .get(`${url}/api/members`, {
+       withCredentials: true,
+     })
+     .then((response) => {
+       console.log(response.data);
+       setData(response.data);
+     })
+     .catch((error) => {
+       console.log(error);
+     });
+ }, []);
+  const membersNumber = data.length;
+
+
   return (
     <div>
       <Navbar />
       <Box>
-        <Heading textAlign={"center"}>All Members (6)</Heading>
+        <Heading textAlign={"center"}>All Members ({membersNumber})</Heading>
       </Box>
       <Box display={"flex"} justifyContent={"center"}>
         <Stack
@@ -46,12 +69,20 @@ const Members = () => {
             </InputGroup>
             <button className="srchBtn">Search</button>
           </Box>
-          <UserCard />
-          <UserCard />
-          <UserCard />
-          <UserCard />
-          <UserCard />
-          <UserCard />
+          {data.map((item, index) => {
+            return (
+              <UserCard
+                key={index}
+                name={item.name}
+                email={item.email}
+                dept={item.department}
+                roll={item.roll}
+                batch={item.batch}
+                phone={item.phone}
+                id={item._id}
+              />
+            );
+          })}
         </Stack>
       </Box>
     </div>

@@ -8,6 +8,48 @@ import { GrUserExpert } from "react-icons/gr";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
 import UserCard from "../cards/UserCard";
+
+import {useState} from 'react'
+import uploadpic from '../../assets/upload4.jpg'
+
+
+const Event = () => {
+
+  const [user, setUser] = useState({
+    eventName: "",
+    eventDate: "",
+    eventdesc: "",
+    eventLastDate: "",
+    eventMode: "",
+    eventProfile:""
+  });
+const [file, setFile] = useState();
+
+  const handelUser = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
+
+   const onUpload = async (e) => {
+     const base64 = await convertToBase64(e.target.files[0]);
+     setFile(base64);
+     setUser({ ...user, eventProfile: base64 });
+   };
+   function convertToBase64(file) {
+     return new Promise((resolve, reject) => {
+       const fileReader = new FileReader();
+       fileReader.readAsDataURL(file);
+
+       fileReader.onload = () => {
+         resolve(fileReader.result);
+       };
+
+       fileReader.onerror = (error) => {
+         reject(error);
+       };
+     });
+   }
+
 import mongoose from "mongoose";
 import axios from "axios";
 
@@ -104,8 +146,21 @@ const Event = () => {
                   borderRadius="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
                 >
                   <FormControl width="100%">
+                    <div className="posterevent">
+                      <FormLabel htmlFor="imgInput">
+                        <img
+                          className="profilimg"
+                          src={file || uploadpic}
+                          alt="img"
+                        />
+                      </FormLabel>
+                      <input id="imgInput" onChange={onUpload} type="file" />
+                    </div>
                     <FormLabel>Enter Event Name</FormLabel>
                     <Input
+                      name="eventName"
+                      value={user.eventName}
+                      onChange={handelUser}
                       focusBorderColor="#675cff"
                       borderRadius={"20"}
                       border="2px solid #675cff "
@@ -113,6 +168,9 @@ const Event = () => {
                     />
                     <FormLabel>Enter Event Desciption</FormLabel>
                     <Input
+                      name="eventdesc"
+                      value={user.eventdesc}
+                      onChange={handelUser}
                       focusBorderColor="#675cff"
                       borderRadius={"20"}
                       border="2px solid #675cff "
@@ -120,6 +178,9 @@ const Event = () => {
                     />
                     <FormLabel>Enter Event Date</FormLabel>
                     <Input
+                      name="eventDate"
+                      value={user.eventDate}
+                      onChange={handelUser}
                       focusBorderColor="#675cff"
                       borderRadius={"20"}
                       border="2px solid #675cff "
@@ -127,6 +188,9 @@ const Event = () => {
                     />
                     <FormLabel>Enter Last Registration Date</FormLabel>
                     <Input
+                      name="eventLastDate"
+                      value={user.eventLastDate}
+                      onChange={handelUser}
                       focusBorderColor="#675cff"
                       borderRadius={"20"}
                       border="2px solid #675cff "
@@ -140,14 +204,21 @@ const Event = () => {
                       )
                     </FormLabel>
                     <Input
+                      name="eventMode"
+                      value={user.eventMode}
+                      onChange={handelUser}
                       focusBorderColor="#675cff"
                       borderRadius={"20"}
                       border="2px solid #675cff "
                       type="text"
                     />
-                    <FormLabel>Enter Event Poster</FormLabel>
-                    <Input type="file" />
                   </FormControl>
+                  <button
+                    onClick={() => {
+                      console.log(user);
+                    }}
+                    className="eventBtn"
+                  >
                   <button onClick={handleCreateEvent} className="eventBtn">
                     Create Event
                   </button>

@@ -2,7 +2,8 @@ import { useState } from "react";
 import "./Navbar.css";
 import Logo from "../../assets/logo.png";
 import { Link , useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import url from "../helper/helper";
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -11,6 +12,18 @@ const Navbar = () => {
     const handleHamburgerClick = () => {
       setNavActive(!isNavActive);
     };
+
+      const logout = async () => {
+        try {
+          await axios.get(`${url}/api/logout`, {
+            withCredentials: true,
+          });
+          console.log("log out");
+          navigate("/");
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
   return (
     <header>
@@ -59,7 +72,7 @@ const Navbar = () => {
           </li>
           <li>
             <div className="buttons">
-              <button onClick={()=>{navigate('/')}} className="login">
+              <button onClick={logout} className="login">
                 <span>
                   <i className="fa-solid fa-user"></i> Logout
                 </span>
