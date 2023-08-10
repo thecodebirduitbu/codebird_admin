@@ -8,6 +8,7 @@ import { GrUserExpert } from "react-icons/gr";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
 import UserCard from "../cards/UserCard";
+
 import {useState} from 'react'
 import uploadpic from '../../assets/upload4.jpg'
 
@@ -48,6 +49,28 @@ const [file, setFile] = useState();
        };
      });
    }
+
+import mongoose from "mongoose";
+import axios from "axios";
+
+const Event = () => {
+  const handleCreateEvent = async () => {
+    try {
+      const eventData = {
+        name: "Event Name",
+        description: "Event Description",
+        date: "Event Date",
+        registrationDate: "Registration Date",
+        mode: "Event Mode",
+        poster: "Event Poster",
+      };
+
+      await axios.post("/create-event", eventData);
+      window.alert("Event Created");
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+  };
 
   return (
     <Box className="eventBox">
@@ -196,6 +219,7 @@ const [file, setFile] = useState();
                     }}
                     className="eventBtn"
                   >
+                  <button onClick={handleCreateEvent} className="eventBtn">
                     Create Event
                   </button>
                 </Box>
