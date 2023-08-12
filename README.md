@@ -13,7 +13,7 @@
 
 2. Start React
 ```bash
-  nom run dev
+  npm run dev
 ```
 
 ## For Backend
