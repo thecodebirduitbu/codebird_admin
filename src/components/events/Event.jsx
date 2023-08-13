@@ -8,13 +8,13 @@ import { GrUserExpert } from "react-icons/gr";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
 import UserCard from "../cards/UserCard";
+import axios from "axios";
 
-import {useState} from 'react'
+import { useState } from 'react'
 import uploadpic from '../../assets/upload4.jpg'
 
 
 const Event = () => {
-
   const [user, setUser] = useState({
     eventName: "",
     eventDate: "",
@@ -23,46 +23,44 @@ const Event = () => {
     eventMode: "",
     eventProfile:""
   });
-const [file, setFile] = useState();
+
+  const [file, setFile] = useState();
 
   const handelUser = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
 
-   const onUpload = async (e) => {
-     const base64 = await convertToBase64(e.target.files[0]);
-     setFile(base64);
-     setUser({ ...user, eventProfile: base64 });
-   };
-   function convertToBase64(file) {
-     return new Promise((resolve, reject) => {
-       const fileReader = new FileReader();
-       fileReader.readAsDataURL(file);
+  const onUpload = async (e) => {
+    const base64 = await convertToBase64(e.target.files[0]);
+    setFile(base64);
+    setUser({ ...user, eventProfile: base64 });
+  };
 
-       fileReader.onload = () => {
-         resolve(fileReader.result);
-       };
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
-       fileReader.onerror = (error) => {
-         reject(error);
-       };
-     });
-   }
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
 
-import mongoose from "mongoose";
-import axios from "axios";
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
-const Event = () => {
   const handleCreateEvent = async () => {
     try {
       const eventData = {
-        name: "Event Name",
-        description: "Event Description",
-        date: "Event Date",
-        registrationDate: "Registration Date",
-        mode: "Event Mode",
-        poster: "Event Poster",
+        name: user.eventName,
+        description: user.eventdesc,
+        date: user.eventDate,
+        registrationDate: user.eventLastDate,
+        mode: user.eventMode,
+        poster: user.eventProfile,
       };
 
       await axios.post("/create-event", eventData);
@@ -213,12 +211,12 @@ const Event = () => {
                       type="text"
                     />
                   </FormControl>
-                  <button
+                  {/* <button
                     onClick={() => {
                       console.log(user);
                     }}
                     className="eventBtn"
-                  >
+                  > */}
                   <button onClick={handleCreateEvent} className="eventBtn">
                     Create Event
                   </button>

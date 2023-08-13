@@ -23,8 +23,6 @@ const event = mongoose.model('event', eventSchema);
 
 
 
-
-
 Router.post('/create-event', async (req, res) => {
     try {
         const {name, description, date, registrationDate, mode} = req.body;
