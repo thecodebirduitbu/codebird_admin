@@ -63,7 +63,7 @@ const Event = () => {
         poster: user.eventProfile,
       };
 
-      await axios.post("/create-event", eventData);
+      await axios.post("http://localhost:3000/create-event", eventData);
       window.alert("Event Created");
     } catch (error) {
       console.error("Error creating event:", error);

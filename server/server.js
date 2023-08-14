@@ -1,16 +1,17 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const cokkie = require("cookie-parser");
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');
+import express, { urlencoded } from "express";
+import { json } from "body-parser";
+import cors from "cors";
+import { config, configDotenv } from "dotenv";
+import cokkie from "cookie-parser";
+import mongoose, { connect, Schema, model, Model } from "mongoose";
+import { hash, compare } from "bcryptjs";
+import { verify as _verify, sign } from 'jsonwebtoken';
 
 
 const app = express();
-dotenv.config();
-const PORT = 8000 || process.env.PORT;
+app.use(express.json());
+config();
+const PORT = 8000 || process.env.PORT; 
 
 //------------------------Middlewares--------------------------
 const corsOptions = {
@@ -20,8 +21,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(cokkie());
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.admin_token;
@@ -30,7 +31,7 @@ const verifyToken = async (req, res, next) => {
     return res.status(400).json({ error: "At First Login " });
   } else {
     try {
-      const verify = await jwt.verify(token, process.env.JWT);
+      const verify = await _verify(token, process.env.JWT);
       if (verify) {
         console.log("verify Done");
         const data = await Admin.findOne({ email: verify.email });
@@ -51,11 +52,10 @@ const verifyToken = async (req, res, next) => {
 
 //------------------------Connect Database--------------------------
 
-mongoose
-  .connect( process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => {
     console.log("Data Base Connected ");
   })
@@ -65,7 +65,17 @@ mongoose
 
 //------------------------Mongodb Models--------------------------
 
-const adminSchema = new mongoose.Schema({
+const eventSchema = new Schema({
+  name: String,
+  description: String,
+  date: Date,
+  registrationDate: Date,
+  mode: String,
+  poster: String,
+});
+
+
+const adminSchema = new Schema({
   name: {
     type: String,
     require: true,
@@ -88,7 +98,7 @@ const adminSchema = new mongoose.Schema({
   },
 });
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     require: true,
@@ -137,7 +147,7 @@ const userSchema = new mongoose.Schema({
 });
 
 
-const paymentSchema = new mongoose.Schema({
+const paymentSchema = new Schema({
   razorpay_order_id: {
     type: String,
     required: true,
@@ -163,7 +173,9 @@ const paymentSchema = new mongoose.Schema({
     required: true,
   },
 });
-const coreTeamSchema = new mongoose.Schema({
+
+
+const coreTeamSchema = new Schema({
   pimg: {
     type: String,
     required: true,
@@ -193,24 +205,25 @@ const coreTeamSchema = new mongoose.Schema({
 
 adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 12);
-    this.cpassword = await bcrypt.hash(this.cpassword, 12);
+    this.password = await hash(this.password, 12);
+    this.cpassword = await hash(this.cpassword, 12);
   }
   next();
 });
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 12);
-    this.cpassword = await bcrypt.hash(this.cpassword, 12);
+    this.password = await hash(this.password, 12);
+    this.cpassword = await hash(this.cpassword, 12);
   }
   next();
 });
 
-const Admin = mongoose.model("Admin", adminSchema);
-const User = mongoose.model("User", userSchema);
-const Payment = mongoose.model("Payment", paymentSchema);
-const Team = mongoose.model("Coreteam", coreTeamSchema);
+const Event = model("Event", eventSchema);
+const Admin = model("Admin", adminSchema);
+const User = model("User", userSchema);
+const Payment = model("Payment", paymentSchema);
+const Team = model("Coreteam", coreTeamSchema);
 
 
 //------------------------Controllers--------------------------
@@ -260,9 +273,9 @@ const login = async (req, res) => {
     if (!userExist) {
       return res.status(404).json({ error: "User Not Found" });
     } else {
-      const verifyPass = await bcrypt.compare(password, userExist.password);
+      const verifyPass = await compare(password, userExist.password);
       if (verifyPass) {
-        const token = jwt.sign(
+        const token = sign(
           { id: userExist._id, email: userExist.email },
           process.env.JWT
         );
@@ -326,7 +339,7 @@ const userDelete = async (req, res) => {
   const id = req.params.id;
   try {
     await User.findOneAndDelete({ _id: id });
-    res.status(200).json("Delete");   
+    res.status(200).json("Delete");
   } catch (error) {
     res.status(400).json(error);
   }
@@ -336,7 +349,7 @@ const userDelete = async (req, res) => {
 const userUpdate = async (req, res) => {
   const id = req.params.id;
   try {
-    const update = await User.findByIdAndUpdate({ _id: id },req.body);
+    const update = await User.findByIdAndUpdate({ _id: id }, req.body);
     res.status(200).json(update);
   } catch (error) {
     res.status(400).json(error);
@@ -356,32 +369,32 @@ const userOneData = async (req, res) => {
 };
 
 //10. Core Team Data Create Controller
-const createTeam = async (req,res)=>{
-  const {name , position , instagram , facebook , linkedin , twitter ,profile} = req.body;
-  if(!name || !position){
+const createTeam = async (req, res) => {
+  const { name, position, instagram, facebook, linkedin, twitter, profile } = req.body;
+  if (!name || !position) {
     return res
-    .status(400)
-    .json({ error: "Fill required fields", success: false });
+      .status(400)
+      .json({ error: "Fill required fields", success: false });
   }
   const userExist = await Team.findOne({ name: name });
-  if(userExist){
-      return res
-        .status(400)
-        .json({ error: "User Already Exist", success: false });
-    }
+  if (userExist) {
+    return res
+      .status(400)
+      .json({ error: "User Already Exist", success: false });
+  }
 
   try {
-   const newMember = new Team({
-     name: name,
-     clubPosition: position,
-     insta:instagram,
-     facebook:facebook,
-     linkedin:linkedin,
-     twitter:twitter,
-     pimg:profile
-   });
-   console.log("done");
-   await newMember.save();
+    const newMember = new Team({
+      name: name,
+      clubPosition: position,
+      insta: instagram,
+      facebook: facebook,
+      linkedin: linkedin,
+      twitter: twitter,
+      pimg: profile
+    });
+    console.log("done");
+    await newMember.save();
     res
       .status(200)
       .json({ message: "CoreTeam Member Registration Done!", success: true });
@@ -392,7 +405,7 @@ const createTeam = async (req,res)=>{
 }
 
 //11. Single Core Team Data Controller
-const singleCoreTeam = async(req,res)=>{
+const singleCoreTeam = async (req, res) => {
   const id = req.params.id;
   try {
     const member = await Team.findById({ _id: id });
@@ -403,7 +416,7 @@ const singleCoreTeam = async(req,res)=>{
 }
 
 //12. All Core Members Data
-const teamData = async (req,res)=>{
+const teamData = async (req, res) => {
   try {
     const member = await Team.find().exec();
     res.json(member)
@@ -412,22 +425,45 @@ const teamData = async (req,res)=>{
   }
 }
 
+//   Events data
+const events = async (req, res) => {
+  try {
+    const { name, description, date, registrationDate, mode } = req.body;
+
+    const newEvent = new Event({
+      name,
+      description,
+      date,
+      registrationDate,
+      mode,
+      poster,
+    })
+
+    await newEvent.save();
+
+    res.status(201).json({ message: "Event Created Successfully" });
+  }
+  catch (error) {
+    res.status(500).json({ error: "An error occurred while creating the event" });
+  }
+}
 
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
 app.post("/api/login", login);
-app.patch("/api/update/:id",userUpdate);
+app.patch("/api/update/:id", userUpdate);
 app.get("/api/members", verifyToken, membersData);
 app.get("/api/transactions", paymentData);
 app.get("/api/users", verifyToken, userData);
+app.post("/api/events", events)
 
-app.post("/api/coreTeam",createTeam);
+app.post("/api/coreTeam", createTeam);
 
-app.get("/api/coreTeam",teamData);
-app.get("/api/coreTeam/:id",singleCoreTeam);
-app.patch("/api/coreTeam",(req,res)=>{res.json("working")});
-app.delete("/api/coreTeam",(req,res)=>{res.json("working")});
+app.get("/api/coreTeam", teamData);
+app.get("/api/coreTeam/:id", singleCoreTeam);
+app.patch("/api/coreTeam", (req, res) => { res.json("working") });
+app.delete("/api/coreTeam", (req, res) => { res.json("working") });
 
 app.get("/api/logout", logout);
 app.get("/api/user/:id", verifyToken, userOneData);

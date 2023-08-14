@@ -1,15 +1,14 @@
 import express from "express";
+import  eventRouter from "./routes/events.js";
+
 import dotenv from 'dotenv';
-const app = Express();
+dotenv.config();
 
-require("dotenv").config()
-import eventsRoute from "./routes/events";
-
+const app = express();
 app.use(express.json());
-app.use("/create-event", eventsRoute)
+app.use("/create-event", eventRouter)
 
-const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
-    console.log("Server started on port 8000")
+    console.log("Server started on port 3000")
 })
