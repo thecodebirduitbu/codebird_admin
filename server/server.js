@@ -1,28 +1,26 @@
-import express, { urlencoded } from "express";
-import { json } from "body-parser";
-import cors from "cors";
-import { config, configDotenv } from "dotenv";
-import cokkie from "cookie-parser";
-import mongoose, { connect, Schema, model, Model } from "mongoose";
-import { hash, compare } from "bcryptjs";
-import { verify as _verify, sign } from 'jsonwebtoken';
-
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const cokkie = require("cookie-parser");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const app = express();
-app.use(express.json());
-config();
-const PORT = 8000 || process.env.PORT; 
+dotenv.config();
+const PORT = 8000 || process.env.PORT;
 
 //------------------------Middlewares--------------------------
 const corsOptions = {
-  origin: "http://localhost:5173", //use when in local server
-  // origin: "https://codebird-admin.vercel.app",
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(cokkie());
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "1024mb" }));
+app.use(bodyParser.urlencoded({ limit: "1024mb", extended: true }));
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.admin_token;
@@ -31,7 +29,7 @@ const verifyToken = async (req, res, next) => {
     return res.status(400).json({ error: "At First Login " });
   } else {
     try {
-      const verify = await _verify(token, process.env.JWT);
+      const verify = await jwt.verify(token, process.env.JWT);
       if (verify) {
         console.log("verify Done");
         const data = await Admin.findOne({ email: verify.email });
@@ -52,10 +50,11 @@ const verifyToken = async (req, res, next) => {
 
 //------------------------Connect Database--------------------------
 
-connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Data Base Connected ");
   })
@@ -65,17 +64,7 @@ connect(process.env.MONGODB_URI, {
 
 //------------------------Mongodb Models--------------------------
 
-const eventSchema = new Schema({
-  name: String,
-  description: String,
-  date: Date,
-  registrationDate: Date,
-  mode: String,
-  poster: String,
-});
-
-
-const adminSchema = new Schema({
+const adminSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -98,7 +87,7 @@ const adminSchema = new Schema({
   },
 });
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -146,8 +135,7 @@ const userSchema = new Schema({
   },
 });
 
-
-const paymentSchema = new Schema({
+const paymentSchema = new mongoose.Schema({
   razorpay_order_id: {
     type: String,
     required: true,
@@ -173,9 +161,7 @@ const paymentSchema = new Schema({
     required: true,
   },
 });
-
-
-const coreTeamSchema = new Schema({
+const coreTeamSchema = new mongoose.Schema({
   pimg: {
     type: String,
     required: true,
@@ -201,30 +187,36 @@ const coreTeamSchema = new Schema({
     type: String,
   },
 });
-
+const eventSchema = new mongoose.Schema({
+  name: { type: String, require: true },
+  description: { type: String, require: true },
+  date: { type: String, require: true },
+  registrationDate: { type: String, require: true },
+  mode: { type: String, require: true },
+  poster: { type: String, require: true },
+});
 
 adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await hash(this.password, 12);
-    this.cpassword = await hash(this.cpassword, 12);
+    this.password = await bcrypt.hash(this.password, 12);
+    this.cpassword = await bcrypt.hash(this.cpassword, 12);
   }
   next();
 });
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await hash(this.password, 12);
-    this.cpassword = await hash(this.cpassword, 12);
+    this.password = await bcrypt.hash(this.password, 12);
+    this.cpassword = await bcrypt.hash(this.cpassword, 12);
   }
   next();
 });
 
-const Event = model("Event", eventSchema);
-const Admin = model("Admin", adminSchema);
-const User = model("User", userSchema);
-const Payment = model("Payment", paymentSchema);
-const Team = model("Coreteam", coreTeamSchema);
-
+const Admin = mongoose.model("Admin", adminSchema);
+const User = mongoose.model("User", userSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+const Team = mongoose.model("Coreteam", coreTeamSchema);
+const Event = mongoose.model("Event", eventSchema);
 
 //------------------------Controllers--------------------------
 
@@ -273,9 +265,9 @@ const login = async (req, res) => {
     if (!userExist) {
       return res.status(404).json({ error: "User Not Found" });
     } else {
-      const verifyPass = await compare(password, userExist.password);
+      const verifyPass = await bcrypt.compare(password, userExist.password);
       if (verifyPass) {
-        const token = sign(
+        const token = jwt.sign(
           { id: userExist._id, email: userExist.email },
           process.env.JWT
         );
@@ -354,7 +346,6 @@ const userUpdate = async (req, res) => {
   } catch (error) {
     res.status(400).json(error);
   }
-
 };
 
 //9.Single Users Data Controller
@@ -370,7 +361,9 @@ const userOneData = async (req, res) => {
 
 //10. Core Team Data Create Controller
 const createTeam = async (req, res) => {
-  const { name, position, instagram, facebook, linkedin, twitter, profile } = req.body;
+  const { name, position, instagram, facebook, linkedin, twitter, profile } =
+    req.body;
+  console.log(req.body);
   if (!name || !position) {
     return res
       .status(400)
@@ -391,18 +384,17 @@ const createTeam = async (req, res) => {
       facebook: facebook,
       linkedin: linkedin,
       twitter: twitter,
-      pimg: profile
+      pimg: profile,
     });
     console.log("done");
     await newMember.save();
     res
       .status(200)
       .json({ message: "CoreTeam Member Registration Done!", success: true });
-
   } catch (error) {
     res.status(400).json({ error: error, success: false });
   }
-}
+};
 
 //11. Single Core Team Data Controller
 const singleCoreTeam = async (req, res) => {
@@ -413,41 +405,74 @@ const singleCoreTeam = async (req, res) => {
   } catch (error) {
     res.status(400).json(error);
   }
-}
+};
 
 //12. All Core Members Data
 const teamData = async (req, res) => {
   try {
     const member = await Team.find().exec();
-    res.json(member)
+    res.json(member);
   } catch (error) {
     res.status(400).json(error);
   }
-}
+};
 
-//   Events data
-const events = async (req, res) => {
+//13 Create Event
+
+const createEvent = async (req, res) => {
+  const { name, description, date, registrationDate, mode, poster } = req.body;
+  if (!name || !poster || !date || !description || !mode || !registrationDate) {
+    return res
+      .status(400)
+      .json({ error: "Fill required fields", success: false });
+  }
+  const userExist = await Event.findOne({ name: name });
+  if (userExist) {
+    return res
+      .status(400)
+      .json({ error: "User Already Exist", success: false });
+  }
   try {
-    const { name, description, date, registrationDate, mode } = req.body;
-
-    const newEvent = new Event({
+    const newevent = new Event({
       name,
       description,
       date,
       registrationDate,
       mode,
       poster,
-    })
-
-    await newEvent.save();
-
-    res.status(201).json({ message: "Event Created Successfully" });
+    });
+    console.log("done");
+    await newevent.save();
+    res
+      .status(200)
+      .json({ message: "CoreTeam Member Registration Done!", success: true });
+  } catch (error) {
+    res.status(400).json({ error: error, success: false });
   }
-  catch (error) {
-    res.status(500).json({ error: "An error occurred while creating the event" });
-  }
-}
+};
 
+// 14 Get Events
+const eventData = async (req, res) => {
+  try {
+    const events = await Event.find().exec();
+    res.json(events);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+
+// 15 Delete Event
+
+const deleteEvent = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Event.findOneAndDelete({ _id: id });
+    res.status(200).json("Delete");
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 //------------------------Routes--------------------------
 
 app.post("/api/register", register);
@@ -455,16 +480,19 @@ app.post("/api/login", login);
 app.patch("/api/update/:id", userUpdate);
 app.get("/api/members", verifyToken, membersData);
 app.get("/api/transactions", paymentData);
-app.get("/api/users", verifyToken, userData);
-app.post("/api/events", events)
-
+app.get("/api/users", userData);
 app.post("/api/coreTeam", createTeam);
-
 app.get("/api/coreTeam", teamData);
 app.get("/api/coreTeam/:id", singleCoreTeam);
-app.patch("/api/coreTeam", (req, res) => { res.json("working") });
-app.delete("/api/coreTeam", (req, res) => { res.json("working") });
-
+app.patch("/api/coreTeam", (req, res) => {
+  res.json("working");
+});
+app.delete("/api/coreTeam", (req, res) => {
+  res.json("working");
+});
+app.post("/api/createEvent",createEvent);
+app.get("/api/event",eventData);
+app.delete("/api/deleteEvent/:id",deleteEvent);
 app.get("/api/logout", logout);
 app.get("/api/user/:id", verifyToken, userOneData);
 app.delete("/api/users/:id", verifyToken, userDelete);
