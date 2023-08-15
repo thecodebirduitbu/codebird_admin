@@ -475,6 +475,9 @@ const deleteEvent = async (req, res) => {
 };
 //------------------------Routes--------------------------
 
+app.post("/", (req,res)=>{
+  res.json("API Is Runnig😢")
+});
 app.post("/api/register", register);
 app.post("/api/login", login);
 app.patch("/api/update/:id", userUpdate);
