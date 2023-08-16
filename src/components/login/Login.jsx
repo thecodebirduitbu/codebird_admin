@@ -57,9 +57,13 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-           await axios.post(`${url}/api/login`, lformData, {
-             withCredentials: true,
-           });
+           await axios.post(
+             `http://localhost:8000/api/login`,
+             lformData,
+             {
+               withCredentials: true,
+             }
+           );
             toast.success("Login Done!");
             setTimeout(() => {
               navigate("/dashboard");

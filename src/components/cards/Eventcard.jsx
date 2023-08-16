@@ -20,72 +20,92 @@ import { useState } from "react";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { IoMdClose } from "react-icons/io";
 import uploadpic from "../../assets/upload4.jpg";
+import axios from "axios";
+import url from "../helper/helper";
 
+const Eventcard = ({ eventName, deadline, date, descp, mode, poster, id }) => {
 
-const Eventcard = () => {
-   const [modalIsOpen, setIsOpen] = useState(false)
-   const [dlmodalIsOpen, setdlIsOpen] = useState(false)
-   const customStyles = {
-     content: {
-       top: "50%",
-       left: "50%",
-       right: "auto",
-       bottom: "auto",
-       marginRight: "-50%",
-       transform: "translate(-50%, -50%)",
-       background:'#fff',
-       height:'21rem',
-       width:'35rem',
-     },
-   };
-   const customStyles2 = {
-     content: {
-       top: "50%",
-       left: "50%",
-       right: "auto",
-       bottom: "auto",
-       marginRight: "-50%",
-       transform: "translate(-50%, -50%)",
-       background:'#fff',
-       height:'38rem',
-       width:'20rem',
-     },
-   };
-
-    const [userC, setUserC] = useState({
-      eventNameC: "",
-      eventDateC: "",
-      eventdescC: "",
-      eventLastDateC: "",
-      eventModeC: "",
-      eventProfileC: "",
-    });
-    const [file, setFile] = useState();
-
-    const handelUser = (e) => {
-      const { name, value } = e.target;
-      setUserC({ ...userC, [name]: value });
-    };
-
-    const onUploadC = async (e) => {
-      const base64 = await convertToBase64(e.target.files[0]);
-      setFile(base64);
-      setUserC({ ...userC, eventProfileC: base64 });
-    };
-    function convertToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-
-        fileReader.onload = () => {
-          resolve(fileReader.result);
-        };
-
-        fileReader.onerror = (error) => {
-          reject(error);
-        };
+  const deleteEvent = async () => {
+    try {
+      const res = await axios.delete(`${url}/api/deleteEvent/${id}`, {
+        withCredentials: true,
       });
+      if (res) {
+        window.alert("Deleted");
+        setTimeout(() => {
+          setdlIsOpen(false);
+          window.location.reload();
+        }, Math.floor(Math.random() * 1001) + 700);
+      }
+    } catch (error) {
+      console.log("error");
     }
+  };
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [dlmodalIsOpen, setdlIsOpen] = useState(false);
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      background: "#fff",
+      height: "21rem",
+      width: "35rem",
+    },
+  };
+  const customStyles2 = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      background: "#fff",
+      height: "38rem",
+      width: "20rem",
+    },
+  };
+
+  const [userC, setUserC] = useState({
+    eventNameC: "",
+    eventDateC: "",
+    eventdescC: "",
+    eventLastDateC: "",
+    eventModeC: "",
+    eventProfileC: "",
+  });
+  const [file, setFile] = useState();
+
+  const handelUser = (e) => {
+    const { name, value } = e.target;
+    setUserC({ ...userC, [name]: value });
+  };
+
+  const onUploadC = async (e) => {
+    const base64 = await convertToBase64(e.target.files[0]);
+    setFile(base64);
+    setUserC({ ...userC, eventProfileC: base64 });
+  };
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+
+    
+  }
   return (
     <Box>
       <Card
@@ -102,38 +122,33 @@ const Eventcard = () => {
               alignItems="center"
               justifyContent={"center"}
               flexWrap="wrap"
+              flexDirection={"column"}
             >
               <Box>
                 <Heading textAlign={"center"} color="#675cff">
-                  Freshers Orientation Program
+                  {eventName}
                 </Heading>
               </Box>
               <Text>
-                <span className="smalltitle">Event</span> - Friday , 15/07/2023
+                <span className="smalltitle">Event</span> - {date}
               </Text>
               <Text>
-                <span className="smalltitle">Deadline</span> - Sunday,
-                10/07/2023
+                <span className="smalltitle">Deadline</span> - {deadline}
               </Text>
               <Text>
-                <span className="smalltitle">Mode</span> - Offline In Room No.
-                201
+                <span className="smalltitle">Mode</span> - {mode}
               </Text>
             </Flex>
           </Flex>
         </CardHeader>
         <CardBody>
-          <Text textAlign={"center"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam
-            blanditiis autem itaque dolorem? Rerum ipsum quia, incidunt suscipit
-            praesentium minus.
-          </Text>
+          <Text textAlign={"center"}>{descp}</Text>
         </CardBody>
         <Image
           borderRadius={10}
           objectFit="cover"
-          src="https://media.licdn.com/dms/image/C5622AQHewqD8RYC6Gg/feedshare-shrink_800/0/1669135675811?e=1694044800&v=beta&t=p2FWvv_4uh4O5G3sVDZ77lUGYfEdPW7247uAzR3xQtI"
-          alt="Chakra UI"
+          src={poster}
+          alt="Event Image"
         />
 
         <CardFooter
@@ -161,8 +176,12 @@ const Eventcard = () => {
             isOpen={modalIsOpen}
             style={customStyles2}
           >
-            <Box display={"flex"} justifyContent={"space-between"} marginBottom={5}>
-              <Heading  color="#675cff" fontSize={25}>
+            <Box
+              display={"flex"}
+              justifyContent={"space-between"}
+              marginBottom={5}
+            >
+              <Heading color="#675cff" fontSize={25}>
                 Update Event
               </Heading>
               <button onClick={() => setIsOpen(false)}>
@@ -303,7 +322,10 @@ const Eventcard = () => {
                 >
                   Cancel
                 </Button>
-                <Button colorScheme="red">Delete</Button>
+                {/* here */}
+                <Button onClick={deleteEvent} colorScheme="red">
+                  Delete
+                </Button>
               </HStack>
             </Box>
           </Modal>
