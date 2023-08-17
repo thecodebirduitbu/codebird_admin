@@ -115,7 +115,7 @@ const Login = () => {
       >
         <Box
           display={"flex"}
-          flexDirection={"row"}
+          flexDirection={"column"}
           justifyContent={"center"}
           gap={3}
           alignItems={"center"}
