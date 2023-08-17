@@ -120,7 +120,7 @@ const Login = () => {
           gap={3}
           alignItems={"center"}
         >
-          <Image src={logo} width={"10"} />
+          <Image src={logo} width={"32"} />
           <Heading textAlign={"center"} fontFamily="'Montserrat', sans-serif;">
             The CodeBird Admin
           </Heading>
