@@ -7,6 +7,7 @@ import {
   InputRightElement,
   Button,
 } from "@chakra-ui/react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import logo from "../../assets/logo.png";
@@ -15,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import url from "../helper/helper";
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -57,50 +57,49 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-           await axios.post(
-             `http://localhost:8000/api/login`,
-             lformData,
-             {
-               withCredentials: true,
-             }
-           );
-            toast.success("Login Done!");
-            setTimeout(() => {
-              navigate("/dashboard");
-            }, Math.floor(Math.random() * 1001) + 700);
-            
-         } catch (error) {
-            console.log(error);
-           toast.error("Login Failed!");
-         }
+        await axios.post(`http://localhost:8000/api/login`, lformData, {
+          withCredentials: true,
+        });
+        toast.success("Login Done!");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, Math.floor(Math.random() * 1001) + 700);
+      } catch (error) {
+        console.log(error);
+        toast.error("Login Failed!");
+      }
     }
   };
 
   const registerSubmit = async () => {
-    if (!rformData.email || !rformData.password || !rformData.name || !rformData.cpassword || !rformData.phone ) {
+    if (
+      !rformData.email ||
+      !rformData.password ||
+      !rformData.name ||
+      !rformData.cpassword ||
+      !rformData.phone
+    ) {
       toast.error("Please fill all required fields!");
-    } else{
-        try {
-            await axios.post(`${url}/api/register`, rformData, {
-              withCredentials: true,
-            });
-            toast.success("Register Done,You Can Login Now!");
-            setRFormData({
-              ...rformData,
-              name: "",
-              phone: "",
-              email: "",
-              password: "",
-              cpassword: ""
-            });
-         } catch (error) {
-            console.log(error);
-           toast.error("Register Failed!");
-         }
+    } else {
+      try {
+        await axios.post(`${url}/api/register`, rformData, {
+          withCredentials: true,
+        });
+        toast.success("Register Done,You Can Login Now!");
+        setRFormData({
+          ...rformData,
+          name: "",
+          phone: "",
+          email: "",
+          password: "",
+          cpassword: "",
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error("Register Failed!");
+      }
     }
   };
-
-
 
   return (
     <Box>
@@ -116,12 +115,12 @@ const Login = () => {
       >
         <Box
           display={"flex"}
-          flexDirection={"row"}
+          flexDirection={"column"}
           justifyContent={"center"}
           gap={3}
           alignItems={"center"}
         >
-          <Image src={logo} width={"10"} />
+          <Image src={logo} width={"32"} />
           <Heading textAlign={"center"} fontFamily="'Montserrat', sans-serif;">
             The CodeBird Admin
           </Heading>
@@ -169,7 +168,7 @@ const Login = () => {
                     />
                     <InputRightElement width="4.5rem">
                       <Button h="1.75rem" size="sm" onClick={handleClick}>
-                        {show ? "Hide" : "Show"}
+                        {show ? <FaEye /> : <FaEyeSlash />}
                       </Button>
                     </InputRightElement>
                   </InputGroup>
