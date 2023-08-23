@@ -21,13 +21,13 @@ import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { IoMdClose } from "react-icons/io";
 import uploadpic from "../../assets/upload4.jpg";
 import axios from "axios";
-// import url from "../helper/helper";
+import url from "../helper/helper";
 
 const Eventcard = ({ eventName, deadline, date, descp, mode, poster, id }) => {
 
   const deleteEvent = async () => {
     try {
-      const res = await axios.delete(`https://thecodebird-admin-server.vercel.app/api/deleteEvent/https://thecodebird-admin-server.vercel.app`, {
+      const res = await axios.delete(`${url}/api/deleteEvent/${id}`, {
         withCredentials: true,
       });
       if (res) {

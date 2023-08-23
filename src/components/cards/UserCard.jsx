@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { RxCrossCircled } from "react-icons/rx";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import axios from "axios";
-// import url from "../helper/helper";
+import url from "../helper/helper";
 import { Toaster, toast } from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 
@@ -16,7 +16,7 @@ const UserCard = ({ name, email, phone, roll, dept, batch , id }) => {
 
   useEffect(() => {
     axios
-      .get(`https://thecodebird-admin-server.vercel.app/api/user/${id}`, {
+      .get(`${url}/api/user/${id}`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -70,7 +70,7 @@ const UserCard = ({ name, email, phone, roll, dept, batch , id }) => {
 
   const handleUpdate = async ()=>{
     try {
-      const res = await axios.patch(`https://thecodebird-admin-server.vercel.app/api/update/https://thecodebird-admin-server.vercel.app`,update, {
+      const res = await axios.patch(`${url}/api/update/${id}`,update, {
         withCredentials: true,
       });
       if (res) {
@@ -89,7 +89,7 @@ const UserCard = ({ name, email, phone, roll, dept, batch , id }) => {
 
   const handel = async ()=>{
     try {
-      const res = await axios.delete(`https://thecodebird-admin-server.vercel.app/api/users/https://thecodebird-admin-server.vercel.app`, {
+      const res = await axios.delete(`${url}/api/users/${id}`, {
         withCredentials: true,
       });
       if (res) {
