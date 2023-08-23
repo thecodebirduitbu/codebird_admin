@@ -25,7 +25,7 @@ const Event = () => {
 
   useEffect(() => {
     axios
-      .get(`https://thecodebird-admin-server.vercel.app/api/event`, {
+      .get(`https://codebird-admin-server.vercel.app/api/event`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -92,7 +92,7 @@ const Event = () => {
         poster: user.eventProfile,
       };
       console.log(eventData);
-      await axios.post(`https://thecodebird-admin-server.vercel.app/api/createEvent`, eventData);
+      await axios.post(`https://codebird-admin-server.vercel.app/api/createEvent`, eventData);
       window.alert("Event Created");
     } catch (error) {
       console.error("Error creating event:", error);

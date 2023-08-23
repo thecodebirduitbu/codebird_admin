@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-        await axios.post(`${url}/api/login`, lformData, {
+        await axios.post(`https://codebird-admin-server.vercel.app/api/login`, lformData, {
           withCredentials: true,
         });
         toast.success("Login Done!");
@@ -82,7 +82,7 @@ const Login = () => {
       toast.error("Please fill all required fields!");
     } else {
       try {
-        await axios.post(`${url}/api/register`, rformData, {
+        await axios.post(`https://codebird-admin-server.vercel.app/api/register`, rformData, {
           withCredentials: true,
         });
         toast.success("Register Done,You Can Login Now!");
