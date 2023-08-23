@@ -57,7 +57,7 @@ const Login = () => {
     } else {
       console.log(lformData);
       try {
-        await axios.post(`http://localhost:8000/api/login`, lformData, {
+        await axios.post(`${url}/api/login`, lformData, {
           withCredentials: true,
         });
         toast.success("Login Done!");
