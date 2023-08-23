@@ -9,7 +9,7 @@ import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Eventcard from "../cards/Eventcard";
 import UserCard from "../cards/UserCard";
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 import { useState, useEffect } from "react";
 import uploadpic from "../../assets/upload4.jpg";
@@ -25,7 +25,7 @@ const Event = () => {
 
   useEffect(() => {
     axios
-      .get(`${url}/api/event`, {
+      .get(`https://thecodebird-admin-server.vercel.app/api/event`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -92,7 +92,7 @@ const Event = () => {
         poster: user.eventProfile,
       };
       console.log(eventData);
-      await axios.post(`${url}/api/createEvent`, eventData);
+      await axios.post(`https://thecodebird-admin-server.vercel.app/api/createEvent`, eventData);
       window.alert("Event Created");
     } catch (error) {
       console.error("Error creating event:", error);
