@@ -12,10 +12,22 @@ dotenv.config();
 const PORT = 8000 || process.env.PORT;
 
 //------------------------Middlewares----------------------
+const allowedOrigins = [
+  process.env.FRONTEND_URL, // No need for interpolation here
+  'https://thecodebird-admin.vercel.app',
+];
+
 const corsOptions = {
-  origin: "https://thecodebird-admin.vercel.app",
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(cokkie());
 app.use(express.urlencoded({ extended: true }));
