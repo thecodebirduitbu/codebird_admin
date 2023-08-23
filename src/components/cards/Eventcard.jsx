@@ -27,7 +27,7 @@ const Eventcard = ({ eventName, deadline, date, descp, mode, poster, id }) => {
 
   const deleteEvent = async () => {
     try {
-      const res = await axios.delete(`https://codebird-admin-server.vercel.app/api/deleteEvent/$https://codebird-admin-server.vercel.app`, {
+      const res = await axios.delete(`https://codebird-admin-server.vercel.app/api/deleteEvent/https://codebird-admin-server.vercel.app`, {
         withCredentials: true,
       });
       if (res) {

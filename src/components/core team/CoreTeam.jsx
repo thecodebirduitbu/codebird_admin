@@ -4,7 +4,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { RiGalleryFill } from "react-icons/ri";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
-import Eventcard from "../cards/Eventcard";
+// import Eventcard from "../cards/Eventcard";
 import { useState , useEffect } from "react";
 // import uploadpic from "../../assets/upload4.jpg";
 import uploadpic from "../../assets/user.png";
