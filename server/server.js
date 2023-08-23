@@ -261,13 +261,16 @@ const register = async (req, res) => {
 //2. Login Controller
 const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const userExist = await Admin.findOne({ email: email });
+
     if (!userExist) {
       return res.status(404).json({ error: "User Not Found" });
     }
 
     const verifyPass = await bcrypt.compare(password, userExist.password);
+
     if (!verifyPass) {
       return res.status(401).json({ error: "Invalid Credentials" });
     }
@@ -276,20 +279,25 @@ const login = async (req, res) => {
       { id: userExist._id, email: userExist.email },
       process.env.JWT
     );
+
     const options = {
       httpOnly: true,
     };
-    res.cookie("admin_token", token, options).status(201).json({
-      msg: "Log In Done!",
+
+    res.cookie("admin_token", token, options);
+    return res.status(200).json({
+      message: "Log In Done!",
       userName: userExist.name,
       token: token,
-      cookie: "stored",
     });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+app.post("/api/login", login);
+
 
 
 //3.Users Datafetch Controller
