@@ -9,14 +9,14 @@ import { GoCodeOfConduct } from "react-icons/go";
 import { AiOutlineTeam } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [memdata, setmemData] = useState([]);
   useEffect(() => {
     axios
-      .get(`${url}/api/users`, {
+      .get(`https://thecodebird-admin-server.vercel.app/api/users`, {
         withCredentials: true,
       })
       .then((response) => {
