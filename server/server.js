@@ -14,7 +14,7 @@ const PORT = 8000 || process.env.PORT;
 //------------------------Middlewares----------------------
 const allowedOrigins = [
   // process.env.FRONTEND_URL, // No need for interpolation here
-  'https://thecodebird-admin.vercel.app/',
+  'https://thecodebird-admin.vercel.app',
 ];
 
 const corsOptions = {
