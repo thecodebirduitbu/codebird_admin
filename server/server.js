@@ -257,37 +257,40 @@ const register = async (req, res) => {
   }
 };
 
-//2.Login Controller
+
+//2. Login Controller
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userExist = await Admin.findOne({ email: email });
     if (!userExist) {
       return res.status(404).json({ error: "User Not Found" });
-    } else {
-      const verifyPass = await bcrypt.compare(password, userExist.password);
-      if (verifyPass) {
-        const token = jwt.sign(
-          { id: userExist._id, email: userExist.email },
-          process.env.JWT
-        );
-        const options = {
-          httpOnly: true,
-        };
-        return res.cookie("admin_token", token, options).status(201).json({
-          msg: "Log In Done !",
-          userName: userExist.name,
-          token: token,
-          cookie: "stored",
-        });
-      } else {
-        return res.status(500).json({ error: "Invalid Details " });
-      }
     }
+
+    const verifyPass = await bcrypt.compare(password, userExist.password);
+    if (!verifyPass) {
+      return res.status(401).json({ error: "Invalid Credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: userExist._id, email: userExist.email },
+      process.env.JWT
+    );
+    const options = {
+      httpOnly: true,
+    };
+    res.cookie("admin_token", token, options).status(201).json({
+      msg: "Log In Done!",
+      userName: userExist.name,
+      token: token,
+      cookie: "stored",
+    });
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error during login:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 //3.Users Datafetch Controller
 const userData = async (req, res) => {
