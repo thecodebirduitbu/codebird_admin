@@ -8,7 +8,7 @@ import { FaRupeeSign } from "react-icons/fa";
 import TransactionsCard from "../cards/TransactionsCard";
 import {useState , useEffect} from 'react'
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 
 const Transaction = () => {
@@ -16,7 +16,7 @@ const Transaction = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     axios
-      .get(`${url}/api/transactions`, {
+      .get(`https://codebird-admin-server.vercel.app/api/transactions`, {
         withCredentials: true,
       })
       .then((response) => {

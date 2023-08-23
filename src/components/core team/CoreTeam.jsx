@@ -11,14 +11,14 @@ import uploadpic from "../../assets/user.png";
 import MemberCard from "../cards/MemberCard";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 
 const CoreTeam = () => {
   const [data,setData] = useState([]);
   useEffect(() => {
     axios
-      .get(`${url}/api/coreTeam`, {
+      .get(`https://codebird-admin-server.vercel.app/api/coreTeam`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -51,7 +51,7 @@ const CoreTeam = () => {
       toast.error("Please fill all required fields!");
     } else {
       try {
-        const res = await axios.post(`${url}/api/coreTeam`, user, {
+        const res = await axios.post(`https://codebird-admin-server.vercel.app/api/coreTeam`, user, {
           withCredentials: true,
         });
         console.log(res);

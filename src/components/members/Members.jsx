@@ -10,7 +10,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import url from "../helper/helper";
+// import url from "../helper/helper";
 
 
 const Members = () => {
@@ -18,7 +18,7 @@ const Members = () => {
  const [data, setData] = useState([]);
  useEffect(() => {
    axios
-     .get(`${url}/api/members`, {
+     .get(`https://codebird-admin-server.vercel.app/api/members`, {
        withCredentials: true,
      })
      .then((response) => {
